@@ -1,4 +1,5 @@
 @import url('http://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap');
+@import url('http://fonts.googleapis.com/icon?family=Material+Icons');
 
 * {
     margin: 0;
@@ -14,20 +15,15 @@ body {
 }
 
 .container {
+    height: 100vh;
+
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0 auto;
 }
 
 .wrapper {
     max-width: 1280px;
-
-    display: flex;
-    flex-direction: column;
-    margin: auto 0;
 }
 
 .display {
@@ -45,6 +41,11 @@ body {
 }
 
 .keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -52,10 +53,6 @@ body {
 
     border: .25rem solid #857e71;
     border-radius: .6rem;
-}
-
-.keyboard__row {
-    display: flex;
 }
 
 .keyboard__key {
@@ -78,17 +75,29 @@ body {
 .keyboard__key.one_half {
     width: 7.8rem;
 }
+.keyboard__key.one_half .symbol{
+    width: 6.6rem;
+}
 
 .keyboard__key.double {
     width: 10.4rem;
+}
+.keyboard__key.double .symbol {
+    width: 9.2rem;
 }
 
 .keyboard__key.double_half {
     width: 12.8rem;
 }
+.keyboard__key.double_half .symbol {
+    width: 11.6rem;
+}
 
 .keyboard__key.multiple {
-    width: 33rem;
+    width: 35rem;
+}
+.keyboard__key.multiple .symbol {
+    width: 33.8rem;
 }
 
 .keyboard__key.pressed {
@@ -112,9 +121,10 @@ body {
         inset 0rem -.2rem .5rem #baaf9e;
 
     transition: .1s;
+    font-size: 1.5rem;
 }
 
-.keyboard__key.pressed  .symbol{
+.keyboard__key.pressed .symbol{
     width: 3.8rem;
     height: 3.8rem;
     font-size: 90%;
