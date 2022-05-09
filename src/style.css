@@ -9,6 +9,8 @@
 body {
     font-family: 'Lato', sans-serif;
     transition: .2s;
+
+    background-color: #b7ad9b;
 }
 
 .container {
@@ -25,6 +27,21 @@ body {
 
     display: flex;
     flex-direction: column;
+    margin: auto 0;
+}
+
+.display {
+    width: 100%;
+    height: 35vh;
+    margin-bottom: 5vh;
+
+    background-color: #eee0ce;
+
+    border: .25rem solid #857e71;
+    border-radius: .6rem;
+
+    font-size: 1.5rem;
+    padding: 1rem;
 }
 
 .keyboard {
@@ -32,6 +49,9 @@ body {
     width: 100%;
     overflow: hidden;
     background-color: #f3edd3;
+
+    border: .25rem solid #857e71;
+    border-radius: .6rem;
 }
 
 .keyboard__row {
