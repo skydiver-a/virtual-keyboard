@@ -1,0 +1,66 @@
+.btn_rectangular {
+  @include fonts ('Georgia', normal, 400, 17px, 110%);  
+  letter-spacing: 0.04em;
+  color: $color-dark-3xl;
+
+  border: 2px solid $color-primary;
+  border-radius: 100px;
+  padding: 15px 45px;
+  
+  &.bordered {
+    background: $color-light-xl;
+
+    &.tapped {
+      background: $color-primary;
+    }
+
+    @include media-tablet {
+      padding: 12px 42px;
+    }
+  }
+
+  &.colored {
+    background: $color-primary;    
+
+    @include media-tablet {
+      padding: 12px 42px;
+    }
+  }
+
+  &:hover {
+    @extend %transition;
+    background: $color-primary-light;
+  }
+}
+
+.btn_rounded {
+  @include fonts ('Georgia', normal, 400, 32px, 100%);  
+  color: $color-dark-3xl;
+
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+
+  &.bordered {
+    background: $color-light-xl;
+    border: 3px solid $color-primary;
+
+    &:hover {
+      @extend %transition;
+      background: $color-primary-light;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  &.inactive {
+    cursor: none;
+    color: $color-dark-s;
+    border: 3px solid $color-dark-s;
+  }
+
+  &.active {
+    cursor: none;
+    background: $color-primary;
+    border: 3px solid $color-primary;
+  }  
+}
