@@ -9,48 +9,5 @@ html {
 }
 
 body { 
-  @include media-mobile {
-    &.blocked {
-      overflow: hidden;  
-      &::before {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: rgba(0, 0, 0, .5);
-        &.our_pets_page {
-          background-color: rgba(255, 255, 255, .5);
-        }
-        z-index: 1;
-      }
-    }
-  }
-}
-
-ul {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  @extend %transition;
-}
-
-h1 {
-  @include fonts ('Georgia', normal, 400, 32px, 110%);
-}
-
-h2 {
-  @include fonts ('Georgia', normal, 400, 44px, 57px);
-}
-
-h3 {
-  @include fonts ('Georgia', normal, 400, 35px, 45px);
-  @include media-mobile {
-    @include fonts('Georgia', normal, 400, 25px, 130%);
-  }
-  letter-spacing: 0.06em;
+  background-color: $color-main;
 }

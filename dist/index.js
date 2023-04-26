@@ -1,8 +1,184 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/js/KeyBoard.js":
+/*!****************************!*\
+  !*** ./src/js/KeyBoard.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Keyboard": () => (/* binding */ Keyboard)
+/* harmony export */ });
+/* harmony import */ var _en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./en */ "./src/js/en.js");
+/* harmony import */ var _ru__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ru */ "./src/js/ru.js");
+/* harmony import */ var _ru__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_ru__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+var Keyboard = /*#__PURE__*/function () {
+  function Keyboard() {
+    var lang = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _en__WEBPACK_IMPORTED_MODULE_0__.en;
+    _classCallCheck(this, Keyboard);
+    this.container = '';
+    this.textArea = '';
+    this.keyBoard = '';
+    this.groups = _toConsumableArray(Array(5)).map(function () {
+      return '';
+    });
+    this.keys = [];
+    this.lang = lang;
+    this.properties = {
+      shiftKey: false
+    };
+  }
+  _createClass(Keyboard, [{
+    key: "init",
+    value: function init() {
+      this.container = this.createDOMNode(this.container, 'div', 'container');
+      this.textArea = this.createDOMNode(this.textArea, 'div', 'textarea');
+      this.keyBoard = this.createDOMNode(this.keyBoard, 'div', 'keyboard');
+      document.body.append(this.container);
+      this.container.append(this.textArea);
+      this.container.append(this.keyBoard);
+      this.keyBoard.append(this.createKeys());
+    }
+  }, {
+    key: "createDOMNode",
+    value: function createDOMNode(node, element) {
+      var _node$classList;
+      node = document.createElement(element);
+      for (var _len = arguments.length, classes = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        classes[_key - 2] = arguments[_key];
+      }
+      (_node$classList = node.classList).add.apply(_node$classList, classes);
+      return node;
+    }
+  }, {
+    key: "createKeys",
+    value: function createKeys() {
+      var _this = this;
+      var fragment = document.createDocumentFragment();
+      var _loop = function _loop(i) {
+        _this.keyBoard.append(_this.groups[i] = _this.createDOMNode(_this.groups[i], 'div', 'keyboard__group'));
+        _this.lang[i].forEach(function (el) {
+          var key = _this.createDOMNode('', 'button', 'keyboard__key');
+          key.innerHTML = _this.createSymbol(!_this.properties.shiftKey ? el[0] : el[1]);
+          _this.keys.push(key);
+          _this.groups[i].append(key);
+        });
+        fragment.appendChild(_this.groups[i]);
+      };
+      for (var i = 0; i < this.groups.length; i++) {
+        _loop(i);
+      }
+      return fragment;
+    }
+  }, {
+    key: "createSymbol",
+    value: function createSymbol(symbol) {
+      return "<span class='symbol'>".concat(symbol, "</span>");
+    }
+  }]);
+  return Keyboard;
+}();
+
+/***/ }),
+
+/***/ "./src/js/en.js":
+/*!**********************!*\
+  !*** ./src/js/en.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "en": () => (/* binding */ en)
+/* harmony export */ });
+var en = [[['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['5', '%'], ['6', '^'], ['7', '&'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['q', 'Q'], ['w', 'W'], ['e', 'E'], ['r', 'R'], ['t', 'T'], ['y', 'Y'], ['u', 'U'], ['i', 'I'], ['o', 'O'], ['p', 'P'], ['{', '['], ['}', ']'], ['|', '\\'], ['del', 'del']], [['capslock', 'capslock'], ['a', 'A'], ['s', 'S'], ['d', 'D'], ['f', 'F'], ['g', 'G'], ['h', 'H'], ['j', 'J'], ['k', 'K'], ['l', 'L'], [':', ';'], ['"', "'"], ['enter', 'enter']], [['shift', 'shift'], ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], ['<', ','], ['>', '.'], ['?', '/'], ['shift', 'shift']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
+
+/***/ }),
+
+/***/ "./src/js/ru.js":
+/*!**********************!*\
+  !*** ./src/js/ru.js ***!
+  \**********************/
+/***/ (() => {
+
+var ru = [[['~', 'ё'], ['!', '1'], ['""', '2'], ['№', '3'], [';', '4'], ['%', '5'], [':', '6'], ['?', '7'], ['*', '8'], ['(', '9'], [')', '0'], ['_', '-'], ['+', '='], ['backspace', 'backspace']], [['tab', 'tab'], ['й', 'Й'], ['ц', 'Ц'], ['у', 'У'], ['к', 'К'], ['е', 'Е'], ['н', 'Н'], ['г', 'Г'], ['ш', 'Ш'], ['щ', 'Щ'], ['з', 'З'], ['х', 'Х'], ['ъ', 'Ъ'], ['del', 'del']], [['capslock', 'capslock'], ['ф', 'Ф'], ['ы', 'Ы'], ['в', 'В'], ['а', 'А'], ['п', 'П'], ['р', 'Р'], ['о', 'О'], ['л', 'Л'], ['д', 'Д'], ['ж', 'Ж'], ['э', 'Э'], ['enter', 'enter']], [['shift', 'shift'], ['я', 'Я'], ['ч', 'Ч'], ['с', 'С'], ['м', 'М'], ['и', 'И'], ['т', 'Т'], ['ь', 'Ь'], ['б', 'Б'], ['ю', 'Ю'], [',', '.'], ['shift', 'shift']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['ctrl', 'ctrl'], ['left', 'left'], [['up', 'up'], ['down', 'down']], ['right', 'right']]];
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -16,12 +192,19 @@
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
+var __webpack_exports__ = {};
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-console.log("Starting");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _js_KeyBoard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./js/KeyBoard */ "./src/js/KeyBoard.js");
+
+window.onload = function () {
+  new _js_KeyBoard__WEBPACK_IMPORTED_MODULE_0__.Keyboard().init();
+};
 })();
 
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
