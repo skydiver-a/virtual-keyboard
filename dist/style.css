@@ -15,4 +15,85 @@ body {
   background-color: rgb(214, 214, 214);
 }
 
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.keyboard > div {
+  width: 100%;
+  height: 60px;
+}
+
+.keyboard__group {
+  margin: 10px 0 0 0;
+}
+.keyboard__group button {
+  color: #000000;
+  font-size: 20px;
+  width: 55px;
+  height: 55px;
+  margin-left: 9px;
+  border: none;
+  border-radius: 10px;
+  background: rgb(214, 214, 214);
+  box-shadow: 5px 5px 10px #474343, -5px -5px 10px #FFFFFF;
+  outline: none;
+}
+.keyboard__group button:active {
+  box-shadow: 1px 1px 2px #FFF8F8, -1px -1px 2px #474343;
+}
+.keyboard__group .keyboard__key.backspace {
+  width: 119px;
+  border-radius: 10px;
+}
+.keyboard__group .keyboard__key.backspace > span {
+  margin-left: 70px;
+}
+.keyboard__group .keyboard__key.capslock {
+  width: 95px;
+  border-radius: 10px;
+}
+.keyboard__group .keyboard__key.enter {
+  width: 143px;
+  border-radius: 10px;
+}
+.keyboard__group .keyboard__key.enter > span {
+  margin-left: 92px;
+}
+.keyboard__group .keyboard__key.shift_left {
+  width: 150px;
+  border-radius: 10px;
+}
+.keyboard__group .keyboard__key.shift_left > span {
+  margin-left: -100px;
+}
+.keyboard__group .keyboard__key.shift_right {
+  width: 150px;
+  border-radius: 10px;
+}
+.keyboard__group .keyboard__key.shift_right > span {
+  margin-left: 100px;
+}
+.keyboard__group .keyboard__key.space {
+  width: 439px;
+  border-radius: 10px;
+}
+.keyboard__group .keyboard__key.up {
+  height: 25px;
+  border-radius: 5px;
+  position: absolute;
+}
+.keyboard__group .keyboard__key.down {
+  height: 25px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 5px;
+}
+.keyboard__group .keyboard__key.right {
+  margin-left: 72px;
+}
+
 /*# sourceMappingURL=style.css.map*/

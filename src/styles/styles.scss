@@ -5,20 +5,10 @@
 // 
 // Base elements
 @import 'base/base';
-// @import 'base/buttons';
-// @import 'base/colorized';
-// @import 'base/menu'; 
-// @import 'base/modal';
-// 
-// // Layouts
-// @import 'layouts/wrapper';
-// @import 'layouts/columns';
-// 
-// // Components
-// @import 'components/header';
+ 
+// Layouts
+@import 'layouts/container';
+ 
+// Components
+@import 'components/keyboard';
 // @import 'components/start';
-// @import 'components/about';
-// @import 'components/pets';
-// @import 'components/help';
-// @import 'components/donation';
-// @import 'components/footer';

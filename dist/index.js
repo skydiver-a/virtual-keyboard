@@ -76,7 +76,9 @@ var Keyboard = /*#__PURE__*/function () {
         _this.keyBoard.append(_this.groups[i] = _this.createDOMNode(_this.groups[i], 'div', 'keyboard__group'));
         _this.lang[i].forEach(function (el) {
           var key = _this.createDOMNode('', 'button', 'keyboard__key');
-          key.innerHTML = _this.createSymbol(!_this.properties.shiftKey ? el[0] : el[1]);
+          var symbolKey = !_this.properties.shiftKey ? el[0] : el[1];
+          key.innerHTML = _this.createSymbol(symbolKey);
+          _this.getSpecialChars(key, symbolKey);
           _this.keys.push(key);
           _this.groups[i].append(key);
         });
@@ -91,6 +93,95 @@ var Keyboard = /*#__PURE__*/function () {
     key: "createSymbol",
     value: function createSymbol(symbol) {
       return "<span class='symbol'>".concat(symbol, "</span>");
+    }
+  }, {
+    key: "getSpecialChars",
+    value: function getSpecialChars(key, symbol) {
+      switch (symbol) {
+        case 'backspace':
+          key.classList.add('backspace');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n          ";
+          /*
+          key.addEventListener('click', () => {
+              this.properties.value =
+                  this.properties.value.substring(0, this.properties.value.length - 1);
+              this._triggerEvent('oninput');
+          });
+          */
+          break;
+        case 'tab':
+          key.classList.add('tab');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n          ";
+          break;
+        case 'del':
+          key.classList.add('del');
+          break;
+        case 'capslock':
+          key.classList.add('capslock');
+          /*
+          key.addEventListener("click", () => {
+            this._toggleCapsLock();
+            key.classList.toggle(".pressed",
+              this.properties.capslock);
+          });
+          */
+          break;
+        case 'enter':
+          key.classList.add('enter');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-level-down fa-rotate-90\"></i>\n          </span>\n          ";
+          /*
+          keyElem.addEventListener("click", () => {
+          this.properties.value += "\n";
+          this._triggerEvent("oninput");
+          });
+          */
+          break;
+        case 'shift_left':
+          key.classList.add('shift_left');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-up\"></i>\n          </span>\n          ";
+          break;
+        case 'shift_right':
+          key.classList.add('shift_right');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-up\"></i>\n          </span>\n          ";
+          break;
+        case 'win':
+          key.classList.add("win");
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-brands fa-windows\"></i>\n          </span>\n        ";
+          break;
+        case 'space':
+          key.classList.add('space');
+          key.innerHTML = "<span class='symbol'>&nbsp;</span>";
+          /*
+          key.addEventListener("click", () => {
+              this.properties.value += " ";
+              this._triggerEvent("oninput");
+          });
+          */
+          break;
+        case 'up':
+          key.classList.add('up');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-angle-up\"></i>\n          </span>\n        ";
+          break;
+        case 'down':
+          key.classList.add('down');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-angle-down\"></i>\n          </span>\n        ";
+          break;
+        case 'left':
+          key.classList.add('left');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-angle-left\"></i>\n          </span>\n        ";
+          break;
+        case 'right':
+          key.classList.add('right');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-angle-right\"></i>\n          </span>\n        ";
+          break;
+        default:
+          /*
+          key.addEventListener("click", () => {
+          this.properties.value += this.properties.capslock ? key.toUpperCase() : key.toLowerCase();
+          this._triggerEvent("oninput");
+          });*/
+          break;
+      }
     }
   }]);
   return Keyboard;
@@ -109,7 +200,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "en": () => (/* binding */ en)
 /* harmony export */ });
-var en = [[['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['5', '%'], ['6', '^'], ['7', '&'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['q', 'Q'], ['w', 'W'], ['e', 'E'], ['r', 'R'], ['t', 'T'], ['y', 'Y'], ['u', 'U'], ['i', 'I'], ['o', 'O'], ['p', 'P'], ['{', '['], ['}', ']'], ['|', '\\'], ['del', 'del']], [['capslock', 'capslock'], ['a', 'A'], ['s', 'S'], ['d', 'D'], ['f', 'F'], ['g', 'G'], ['h', 'H'], ['j', 'J'], ['k', 'K'], ['l', 'L'], [':', ';'], ['"', "'"], ['enter', 'enter']], [['shift', 'shift'], ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], ['<', ','], ['>', '.'], ['?', '/'], ['shift', 'shift']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
+var en = [[['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['5', '%'], ['6', '^'], ['7', '&'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['q', 'Q'], ['w', 'W'], ['e', 'E'], ['r', 'R'], ['t', 'T'], ['y', 'Y'], ['u', 'U'], ['i', 'I'], ['o', 'O'], ['p', 'P'], ['[', '{'], [']', '}'], ['\\', '|'], ['del', 'del']], [['capslock', 'capslock'], ['a', 'A'], ['s', 'S'], ['d', 'D'], ['f', 'F'], ['g', 'G'], ['h', 'H'], ['j', 'J'], ['k', 'K'], ['l', 'L'], [':', ';'], ['"', "'"], ['enter', 'enter']], [['shift_left', 'shift_left'], ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], ['<', ','], ['>', '.'], ['?', '/'], ['shift_right', 'shift_right']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['alt', 'alt'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
 
 /***/ }),
 

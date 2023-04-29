@@ -1,0 +1,82 @@
+.keyboard > div {
+  width: 100%;
+  height: 60px;
+}
+
+.keyboard__group {
+  margin: 10px 0 0 0;
+
+  & button {
+    color: $color-dark;
+    font-size: 20px;
+
+    width: 55px;
+    height: 55px;
+    margin-left: 9px;
+
+    border: none;
+    border-radius: 10px;
+    background: $color-main;
+    box-shadow: 5px 5px 10px $color-dark-shadow, -5px -5px 10px $color-light;
+    outline: none;
+
+    &:active {
+      box-shadow: 1px 1px 2px $color-light-shadow, -1px -1px 2px $color-dark-shadow;
+    }
+  }
+
+  .keyboard__key {
+    &.backspace {
+      width: 119px;
+      border-radius: 10px;
+      & > span {
+        margin-left: 70px;
+      }
+    }
+    &.capslock {
+      width: 95px;
+      border-radius: 10px;
+    }
+    &.enter {
+      width: 143px;
+      border-radius: 10px;
+      & > span {
+        margin-left: 92px;
+      }
+    }
+    &.shift_left {
+      width: 150px;
+      border-radius: 10px;
+      & > span {
+        margin-left: -100px;
+      }
+    }
+    &.shift_right {
+      width: 150px;
+      border-radius: 10px;
+      & > span {
+        margin-left: 100px;
+      }
+    }
+    &.space {
+      width: 439px;
+      border-radius: 10px;
+    }
+    &.up {
+      height: 25px;
+      border-radius: 5px;
+
+      position: absolute;
+    }
+    &.down {
+      height: 25px;
+      border-radius: 5px;
+
+      position: absolute;
+      bottom: 5px;
+    }
+    &.right {
+      margin-left: 72px;
+    }
+  }
+}
