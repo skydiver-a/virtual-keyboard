@@ -95,5 +95,21 @@ body {
 .keyboard__group .keyboard__key.right {
   margin-left: 72px;
 }
+.keyboard__group .keyboard__key.pressed {
+  box-shadow: 1px 1px 2px #FFF8F8, -1px -1px 2px #474343;
+}
+
+.textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  margin-bottom: 40px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 10px;
+  box-shadow: inset -1px -1px 2px #474343;
+  font-size: 20px;
+  resize: none;
+}
 
 /*# sourceMappingURL=style.css.map*/

@@ -9,7 +9,7 @@ export const en = [
     ['capslock', 'capslock'], ['a', 'A'], ['s', 'S'], ['d', 'D'], ['f', 'F'], ['g', 'G'], ['h', 'H'], ['j', 'J'], ['k', 'K'], ['l', 'L'], [':', ';'], ['"', "'"], ['enter', 'enter']
   ],
   [
-    ['shift_left', 'shift_left'], ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], ['<', ','], ['>', '.'], ['?', '/'], ['shift_right', 'shift_right']
+    ['shift_left', 'shift_left'], ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], [',', '<'], ['.', '>'], ['/', '?'], ['shift_right', 'shift_right']
   ],
   [
     ['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['alt', 'alt'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']

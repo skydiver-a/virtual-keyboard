@@ -42,19 +42,32 @@ var Keyboard = /*#__PURE__*/function () {
     this.keys = [];
     this.lang = lang;
     this.properties = {
-      shiftKey: false
+      capsLock: false,
+      shiftKey: false,
+      control: false,
+      alt: false
+    };
+    this.eventHandlers = {
+      oninput: null,
+      onclose: null
     };
   }
   _createClass(Keyboard, [{
     key: "init",
     value: function init() {
+      var _this = this;
       this.container = this.createDOMNode(this.container, 'div', 'container');
-      this.textArea = this.createDOMNode(this.textArea, 'div', 'textarea');
+      this.textArea = this.createDOMNode(this.textArea, 'textarea', 'textarea');
       this.keyBoard = this.createDOMNode(this.keyBoard, 'div', 'keyboard');
       document.body.append(this.container);
       this.container.append(this.textArea);
       this.container.append(this.keyBoard);
       this.keyBoard.append(this.createKeys());
+      this.textArea.addEventListener('focus', function (letter) {
+        _this.open(letter.value, function (currentValue) {
+          letter.value = currentValue;
+        });
+      });
     }
   }, {
     key: "createDOMNode",
@@ -70,19 +83,20 @@ var Keyboard = /*#__PURE__*/function () {
   }, {
     key: "createKeys",
     value: function createKeys() {
-      var _this = this;
+      var _this2 = this;
       var fragment = document.createDocumentFragment();
+      // TODO: think about two symbols on some keys
       var _loop = function _loop(i) {
-        _this.keyBoard.append(_this.groups[i] = _this.createDOMNode(_this.groups[i], 'div', 'keyboard__group'));
-        _this.lang[i].forEach(function (el) {
-          var key = _this.createDOMNode('', 'button', 'keyboard__key');
-          var symbolKey = !_this.properties.shiftKey ? el[0] : el[1];
-          key.innerHTML = _this.createSymbol(symbolKey);
-          _this.getSpecialChars(key, symbolKey);
-          _this.keys.push(key);
-          _this.groups[i].append(key);
+        _this2.keyBoard.append(_this2.groups[i] = _this2.createDOMNode(_this2.groups[i], 'div', 'keyboard__group'));
+        _this2.lang[i].forEach(function (el) {
+          var key = _this2.createDOMNode('', 'button', 'keyboard__key');
+          var symbolKey = !_this2.properties.shiftKey ? el[0] : el[1];
+          key.innerHTML = _this2.createSymbol(symbolKey);
+          _this2.getSpecialChars(key, symbolKey);
+          _this2.keys.push(key);
+          _this2.groups[i].append(key);
         });
-        fragment.appendChild(_this.groups[i]);
+        fragment.appendChild(_this2.groups[i]);
       };
       for (var i = 0; i < this.groups.length; i++) {
         _loop(i);
@@ -97,21 +111,23 @@ var Keyboard = /*#__PURE__*/function () {
   }, {
     key: "getSpecialChars",
     value: function getSpecialChars(key, symbol) {
+      var _this3 = this;
       switch (symbol) {
         case 'backspace':
           key.classList.add('backspace');
-          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n          ";
-          /*
-          key.addEventListener('click', () => {
-              this.properties.value =
-                  this.properties.value.substring(0, this.properties.value.length - 1);
-              this._triggerEvent('oninput');
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n        ";
+          key.addEventListener('click', function () {
+            _this3.textArea.value = _this3.textArea.value.length > 0 ? _this3.textArea.value.slice(0, -1) : '';
+            _this3.triggerEvent('oninput');
           });
-          */
           break;
         case 'tab':
           key.classList.add('tab');
-          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n          ";
+          key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n        ";
+          key.addEventListener('click', function () {
+            _this3.textArea.value += '    ';
+            _this3.triggerEvent('oninput');
+          });
           break;
         case 'del':
           key.classList.add('del');
@@ -175,12 +191,25 @@ var Keyboard = /*#__PURE__*/function () {
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-angle-right\"></i>\n          </span>\n        ";
           break;
         default:
-          /*
-          key.addEventListener("click", () => {
-          this.properties.value += this.properties.capslock ? key.toUpperCase() : key.toLowerCase();
-          this._triggerEvent("oninput");
-          });*/
+          key.addEventListener("click", function () {
+            _this3.textArea.value += _this3.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
+            _this3.triggerEvent("oninput");
+          });
           break;
+      }
+    }
+  }, {
+    key: "open",
+    value: function open(initialValue, oninput, onclose) {
+      this.textArea.value = initialValue || this.textArea.value;
+      this.eventHandlers.oninput = oninput;
+      this.eventHandlers.onclose = onclose;
+    }
+  }, {
+    key: "triggerEvent",
+    value: function triggerEvent(handlerName) {
+      if (typeof this.eventHandlers[handlerName] == "function") {
+        this.eventHandlers[handlerName](this.properties.value);
       }
     }
   }]);
@@ -200,7 +229,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "en": () => (/* binding */ en)
 /* harmony export */ });
-var en = [[['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['5', '%'], ['6', '^'], ['7', '&'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['q', 'Q'], ['w', 'W'], ['e', 'E'], ['r', 'R'], ['t', 'T'], ['y', 'Y'], ['u', 'U'], ['i', 'I'], ['o', 'O'], ['p', 'P'], ['[', '{'], [']', '}'], ['\\', '|'], ['del', 'del']], [['capslock', 'capslock'], ['a', 'A'], ['s', 'S'], ['d', 'D'], ['f', 'F'], ['g', 'G'], ['h', 'H'], ['j', 'J'], ['k', 'K'], ['l', 'L'], [':', ';'], ['"', "'"], ['enter', 'enter']], [['shift_left', 'shift_left'], ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], ['<', ','], ['>', '.'], ['?', '/'], ['shift_right', 'shift_right']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['alt', 'alt'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
+var en = [[['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['5', '%'], ['6', '^'], ['7', '&'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['q', 'Q'], ['w', 'W'], ['e', 'E'], ['r', 'R'], ['t', 'T'], ['y', 'Y'], ['u', 'U'], ['i', 'I'], ['o', 'O'], ['p', 'P'], ['[', '{'], [']', '}'], ['\\', '|'], ['del', 'del']], [['capslock', 'capslock'], ['a', 'A'], ['s', 'S'], ['d', 'D'], ['f', 'F'], ['g', 'G'], ['h', 'H'], ['j', 'J'], ['k', 'K'], ['l', 'L'], [':', ';'], ['"', "'"], ['enter', 'enter']], [['shift_left', 'shift_left'], ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], [',', '<'], ['.', '>'], ['/', '?'], ['shift_right', 'shift_right']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['alt', 'alt'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
 
 /***/ }),
 

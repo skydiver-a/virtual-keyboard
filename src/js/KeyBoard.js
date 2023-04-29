@@ -10,19 +10,32 @@ export class Keyboard {
     this.keys = [];
     this.lang = lang;
     this.properties = {
+      capsLock: false,
       shiftKey: false,
+      control: false,
+      alt: false,
     };
+    this.eventHandlers = {
+      oninput: null,
+      onclose: null
+    }
   }
 
   init() {
     this.container = this.createDOMNode(this.container, 'div', 'container');
-    this.textArea = this.createDOMNode(this.textArea, 'div', 'textarea');
+    this.textArea = this.createDOMNode(this.textArea, 'textarea', 'textarea');
     this.keyBoard = this.createDOMNode(this.keyBoard, 'div', 'keyboard');
 
     document.body.append(this.container);
     this.container.append(this.textArea);
     this.container.append(this.keyBoard);
     this.keyBoard.append(this.createKeys());
+
+    this.textArea.addEventListener('focus', (letter) => {
+      this.open(letter.value, currentValue => {
+        letter.value = currentValue;
+      });
+    });
   }
 
   createDOMNode(node, element, ...classes) {
@@ -33,7 +46,7 @@ export class Keyboard {
 
   createKeys() {
     const fragment = document.createDocumentFragment();
-
+    // TODO: think about two symbols on some keys
     for ( let i = 0; i < this.groups.length; i++) {
       this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
       this.lang[i].forEach(el => {
@@ -64,14 +77,12 @@ export class Keyboard {
           <span class='symbol'>
             <i class="fas fa-long-arrow-left"></i>
           </span>
-          `;
-        /*
+        `;
+        
         key.addEventListener('click', () => {
-            this.properties.value =
-                this.properties.value.substring(0, this.properties.value.length - 1);
-            this._triggerEvent('oninput');
+            this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
+            this.triggerEvent('oninput');
         });
-        */
         break;
       case 'tab':
         key.classList.add('tab');
@@ -79,7 +90,12 @@ export class Keyboard {
           <span class='symbol'>
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </span>
-          `;
+        `;
+
+        key.addEventListener('click', () => {
+          this.textArea.value += '    ';
+          this.triggerEvent('oninput');
+        });
         break;
       case 'del':
         key.classList.add('del');
@@ -174,12 +190,24 @@ export class Keyboard {
           </span>
         `;
         break;
-      default:/*
+      default:
         key.addEventListener("click", () => {
-            this.properties.value += this.properties.capslock ? key.toUpperCase() : key.toLowerCase();
-            this._triggerEvent("oninput");
-        });*/
-        break;
+          this.textArea.value += this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
+          this.triggerEvent("oninput");
+        });
+      break;
+    }
+  }
+
+  open(initialValue, oninput, onclose) {
+    this.textArea.value = initialValue || this.textArea.value;
+    this.eventHandlers.oninput = oninput;
+    this.eventHandlers.onclose = onclose;
+  }
+
+  triggerEvent(handlerName) {
+    if (typeof this.eventHandlers[handlerName] == "function") {
+      this.eventHandlers[handlerName](this.properties.value);
     }
   }
 }
