@@ -6,6 +6,7 @@ export class Keyboard {
     this.container = '';
     this.textArea = '';
     this.keyBoard = '';
+    this.keyBoardKeys = '';
     this.groups = [...Array(5)].map(() => '');
     this.keys = [];
     this.lang = lang;
@@ -33,7 +34,8 @@ export class Keyboard {
     document.body.append(this.container);
     this.container.append(this.textArea);
     this.container.append(this.keyBoard);
-    this.keyBoard.append(this.createKeys());
+    this.keyBoardKeys = this.createKeys()
+    this.keyBoard.append(this.keyBoardKeys);
 
     this.textArea.addEventListener('focus', (letter) => {
       this.open(letter.value, currentValue => {
@@ -55,7 +57,7 @@ export class Keyboard {
       this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
       this.lang[i].forEach(el => {
         const key = this.createDOMNode('', 'button', 'keyboard__key');
-        const symbolKey = !this.properties.shiftKey ? el[0] : el[1];
+        const symbolKey = (!this.properties.shiftKey || !this.properties.capsLock) ? el[0] : el[1]; // ?
 
         key.innerHTML = this.createSymbol(symbolKey);
 
@@ -146,32 +148,25 @@ export class Keyboard {
             this.textArea.value = (this.sets.areaLength === 0) ? 
               '' : 
               this.textArea.value.slice(1, this.sets.areaLength);
-
-            this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos - 1 : 0;
-            this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
           } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
-            this.textArea.value = this.textArea.value;
+            return;
           } else {  // intermediate position
             this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos) + this.textArea.value.slice(this.sets.cursorPos + 1);
+          }     
           
-            this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos - 1 : 0;
-            this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
-          }
-
-          
+          this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos : 0;
+          this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;     
 
           this.triggerEvent("oninput");
         });
         break;
       case 'capslock':
         key.classList.add('capslock');
-        /*
+        
         key.addEventListener("click", () => {
-          this._toggleCapsLock();
-          key.classList.toggle(".pressed",
-            this.properties.capslock);
+          key.classList.toggle("pressed");
+          this.toggleCapsLock();          
         });
-        */
         break;
       case 'enter':
         key.classList.add('enter');
@@ -300,4 +295,8 @@ export class Keyboard {
       this.eventHandlers[handlerName](this.properties.value);
     }
   }
+
+  toggleCapsLock() {
+    this.properties.capsLock = !this.properties.capsLock; 
+  } 
 }

@@ -36,6 +36,7 @@ var Keyboard = /*#__PURE__*/function () {
     this.container = '';
     this.textArea = '';
     this.keyBoard = '';
+    this.keyBoardKeys = '';
     this.groups = _toConsumableArray(Array(5)).map(function () {
       return '';
     });
@@ -66,7 +67,8 @@ var Keyboard = /*#__PURE__*/function () {
       document.body.append(this.container);
       this.container.append(this.textArea);
       this.container.append(this.keyBoard);
-      this.keyBoard.append(this.createKeys());
+      this.keyBoardKeys = this.createKeys();
+      this.keyBoard.append(this.keyBoardKeys);
       this.textArea.addEventListener('focus', function (letter) {
         _this.open(letter.value, function (currentValue) {
           letter.value = currentValue;
@@ -94,7 +96,8 @@ var Keyboard = /*#__PURE__*/function () {
         _this2.keyBoard.append(_this2.groups[i] = _this2.createDOMNode(_this2.groups[i], 'div', 'keyboard__group'));
         _this2.lang[i].forEach(function (el) {
           var key = _this2.createDOMNode('', 'button', 'keyboard__key');
-          var symbolKey = !_this2.properties.shiftKey ? el[0] : el[1];
+          var symbolKey = !_this2.properties.shiftKey || !_this2.properties.capsLock ? el[0] : el[1]; // ?
+
           key.innerHTML = _this2.createSymbol(symbolKey);
           _this2.getSpecialChars(key, symbolKey);
           _this2.keys.push(key);
@@ -173,29 +176,24 @@ var Keyboard = /*#__PURE__*/function () {
             if (_this3.sets.cursorPos === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value.slice(1, _this3.sets.areaLength);
-              _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos - 1 : 0;
-              _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
             } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
               // ending position
-              _this3.textArea.value = _this3.textArea.value;
+              return;
             } else {
               // intermediate position
               _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + _this3.textArea.value.slice(_this3.sets.cursorPos + 1);
-              _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos - 1 : 0;
-              _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
             }
+            _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos : 0;
+            _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
             _this3.triggerEvent("oninput");
           });
           break;
         case 'capslock':
           key.classList.add('capslock');
-          /*
-          key.addEventListener("click", () => {
-            this._toggleCapsLock();
-            key.classList.toggle(".pressed",
-              this.properties.capslock);
+          key.addEventListener("click", function () {
+            key.classList.toggle("pressed");
+            _this3.toggleCapsLock();
           });
-          */
           break;
         case 'enter':
           key.classList.add('enter');
@@ -293,6 +291,11 @@ var Keyboard = /*#__PURE__*/function () {
       if (typeof this.eventHandlers[handlerName] == "function") {
         this.eventHandlers[handlerName](this.properties.value);
       }
+    }
+  }, {
+    key: "toggleCapsLock",
+    value: function toggleCapsLock() {
+      this.properties.capsLock = !this.properties.capsLock;
     }
   }]);
   return Keyboard;
