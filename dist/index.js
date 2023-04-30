@@ -41,6 +41,7 @@ var Keyboard = /*#__PURE__*/function () {
     });
     this.keys = [];
     this.lang = lang;
+    this.cursorPos = 0;
     this.properties = {
       capsLock: false,
       shiftKey: false,
@@ -118,14 +119,19 @@ var Keyboard = /*#__PURE__*/function () {
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n        ";
           key.addEventListener('click', function () {
             _this3.textArea.value = _this3.textArea.value.length > 0 ? _this3.textArea.value.slice(0, -1) : '';
+            _this3.cursorPos = _this3.cursorPos > 0 ? _this3.cursorPos - 1 : 0;
             _this3.triggerEvent('oninput');
           });
           break;
         case 'tab':
           key.classList.add('tab');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n        ";
+          this.textArea.addEventListener('focus', function () {
+            _this3.cursorPos = _this3.getCurrentCursorPosition();
+          });
           key.addEventListener('click', function () {
-            _this3.textArea.value += '    ';
+            _this3.textArea.value = _this3.cursorPos > 0 ? _this3.textArea.value.slice(0, _this3.cursorPos) + '    ' + _this3.textArea.value.slice(_this3.cursorPos) : _this3.textArea.value + '    ';
+            _this3.cursorPos += 4;
             _this3.triggerEvent('oninput');
           });
           break;
@@ -191,17 +197,32 @@ var Keyboard = /*#__PURE__*/function () {
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-angle-right\"></i>\n          </span>\n        ";
           break;
         default:
+          this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
           key.addEventListener("click", function () {
-            _this3.textArea.value += _this3.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
+            _this3.textArea.value = _this3.cursorPos > 0 ? _this3.textArea.value.slice(0, _this3.cursorPos) + symbol + _this3.textArea.value.slice(_this3.cursorPos) : _this3.textArea.value + symbol;
+            // this.textArea.value += this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
+            _this3.cursorPos += 1;
             _this3.triggerEvent("oninput");
           });
           break;
       }
     }
   }, {
+    key: "getCurrentCursorPosition",
+    value: function getCurrentCursorPosition() {
+      return document.querySelector('.textarea').selectionStart;
+    }
+  }, {
     key: "open",
     value: function open(initialValue, oninput, onclose) {
       this.textArea.value = initialValue || this.textArea.value;
+      this.eventHandlers.oninput = oninput;
+      this.eventHandlers.onclose = onclose;
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      this.properties.value = "";
       this.eventHandlers.oninput = oninput;
       this.eventHandlers.onclose = onclose;
     }

@@ -9,6 +9,7 @@ export class Keyboard {
     this.groups = [...Array(5)].map(() => '');
     this.keys = [];
     this.lang = lang;
+    this.cursorPos = 0;
     this.properties = {
       capsLock: false,
       shiftKey: false,
@@ -81,6 +82,7 @@ export class Keyboard {
         
         key.addEventListener('click', () => {
             this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
+            this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
             this.triggerEvent('oninput');
         });
         break;
@@ -92,8 +94,15 @@ export class Keyboard {
           </span>
         `;
 
+        this.textArea.addEventListener('focus', () => {
+          this.cursorPos = this.getCurrentCursorPosition();
+        });
+        
         key.addEventListener('click', () => {
-          this.textArea.value += '    ';
+          this.textArea.value = (this.cursorPos > 0) ? 
+            this.textArea.value.slice(0, this.cursorPos) + '    ' + this.textArea.value.slice(this.cursorPos) :
+            this.textArea.value + '    ';
+          this.cursorPos += 4;
           this.triggerEvent('oninput');
         });
         break;
@@ -191,16 +200,31 @@ export class Keyboard {
         `;
         break;
       default:
+        this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
         key.addEventListener("click", () => {
-          this.textArea.value += this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
+          this.textArea.value = (this.cursorPos > 0) ? 
+            this.textArea.value.slice(0, this.cursorPos) + symbol + this.textArea.value.slice(this.cursorPos) :
+            this.textArea.value + symbol;
+          // this.textArea.value += this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
+          this.cursorPos += 1;
           this.triggerEvent("oninput");
         });
       break;
     }
   }
 
+  getCurrentCursorPosition() {
+    return document.querySelector('.textarea').selectionStart;
+  }
+
   open(initialValue, oninput, onclose) {
     this.textArea.value = initialValue || this.textArea.value;
+    this.eventHandlers.oninput = oninput;
+    this.eventHandlers.onclose = onclose;
+  }
+
+  close() {
+    this.properties.value = "";
     this.eventHandlers.oninput = oninput;
     this.eventHandlers.onclose = onclose;
   }
