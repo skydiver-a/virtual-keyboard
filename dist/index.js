@@ -139,27 +139,29 @@ var Keyboard = /*#__PURE__*/function () {
             _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
             _this3.triggerEvent("oninput");
           });
-          /*
-          key.addEventListener('click', () => {
-              this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
-              this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
-              this.triggerEvent('oninput');
-          });*/
           break;
         case 'tab':
           key.classList.add('tab');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n        ";
-          /*
-                  this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
-          
-                  key.addEventListener('click', () => {
-                    this.textArea.value = (this.cursorPos > 0) ? 
-                      this.textArea.value.slice(0, this.cursorPos) + '    ' + this.textArea.value.slice(this.cursorPos) :
-                      this.textArea.value + '    ';
-          
-                    this.cursorPos += 4;
-                    this.triggerEvent('oninput');
-                  });*/
+          key.addEventListener("click", function () {
+            // check for cursor position
+            _this3.textArea.addEventListener('focus', function () {
+              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
+            });
+            if (_this3.sets.cursorPos === 0) {
+              // beginning position
+              _this3.textArea.value = _this3.sets.areaLength === 0 ? '    ' : '    ' + _this3.textArea.value.slice(0, _this3.sets.areaLength);
+            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+              // ending position
+              _this3.textArea.value += '    ';
+            } else {
+              // intermediate position
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + '    ' + _this3.textArea.value.slice(_this3.sets.cursorPos);
+            }
+            _this3.sets.cursorPos += 4;
+            _this3.sets.areaLength += 4;
+            _this3.triggerEvent("oninput");
+          });
           break;
         case 'del':
           key.classList.add('del');

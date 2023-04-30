@@ -102,12 +102,6 @@ export class Keyboard {
 
           this.triggerEvent("oninput");
         });
-        /*
-        key.addEventListener('click', () => {
-            this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
-            this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
-            this.triggerEvent('oninput');
-        });*/
         break;
       case 'tab':
         key.classList.add('tab');
@@ -116,17 +110,28 @@ export class Keyboard {
             <i class="fa-solid fa-arrow-right-arrow-left"></i>
           </span>
         `;
-        /*
-                this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
-        
-                key.addEventListener('click', () => {
-                  this.textArea.value = (this.cursorPos > 0) ? 
-                    this.textArea.value.slice(0, this.cursorPos) + '    ' + this.textArea.value.slice(this.cursorPos) :
-                    this.textArea.value + '    ';
-        
-                  this.cursorPos += 4;
-                  this.triggerEvent('oninput');
-                });*/
+
+        key.addEventListener("click", () => {
+          // check for cursor position
+          this.textArea.addEventListener('focus', () => {
+            this.sets.cursorPos = +this.getCurrentCursorPosition();
+          });
+
+          if (this.sets.cursorPos === 0) {  // beginning position
+            this.textArea.value = (this.sets.areaLength === 0) ? 
+              '    ' : 
+              '    ' + this.textArea.value.slice(0, this.sets.areaLength);
+          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+            this.textArea.value += '    ';
+          } else {  // intermediate position
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos) + '    ' + this.textArea.value.slice(this.sets.cursorPos);
+          }
+
+          this.sets.cursorPos += 4;
+          this.sets.areaLength += 4;
+
+          this.triggerEvent("oninput");
+        });
         break;
       case 'del':
         key.classList.add('del');
