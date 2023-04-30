@@ -120,15 +120,31 @@ var Keyboard = /*#__PURE__*/function () {
         case 'backspace':
           key.classList.add('backspace');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n        ";
-
+          key.addEventListener("click", function () {
+            // check for cursor position
+            _this3.textArea.addEventListener('focus', function () {
+              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
+            });
+            if (_this3.sets.cursorPos === 0) {
+              // beginning position
+              _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value;
+            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+              // ending position
+              _this3.textArea.value = _this3.textArea.value.slice(0, -1);
+            } else {
+              // intermediate position
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos - 1) + _this3.textArea.value.slice(_this3.sets.cursorPos);
+            }
+            _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos - 1 : 0;
+            _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
+            _this3.triggerEvent("oninput");
+          });
           /*
-                  this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
-          
-                  key.addEventListener('click', () => {
-                      this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
-                      this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
-                      this.triggerEvent('oninput');
-                  });*/
+          key.addEventListener('click', () => {
+              this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
+              this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
+              this.triggerEvent('oninput');
+          });*/
           break;
         case 'tab':
           key.classList.add('tab');

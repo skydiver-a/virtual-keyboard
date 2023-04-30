@@ -83,14 +83,31 @@ export class Keyboard {
           </span>
         `;
 
+        key.addEventListener("click", () => {
+          // check for cursor position
+          this.textArea.addEventListener('focus', () => {
+            this.sets.cursorPos = +this.getCurrentCursorPosition();
+          });
+
+          if (this.sets.cursorPos === 0) {  // beginning position
+            this.textArea.value = (this.sets.areaLength === 0) ? '' : this.textArea.value;
+          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+            this.textArea.value = this.textArea.value.slice(0, -1);
+          } else {  // intermediate position
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos - 1) + this.textArea.value.slice(this.sets.cursorPos);
+          }
+
+          this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos - 1 : 0;
+          this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
+
+          this.triggerEvent("oninput");
+        });
         /*
-                this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
-        
-                key.addEventListener('click', () => {
-                    this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
-                    this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
-                    this.triggerEvent('oninput');
-                });*/
+        key.addEventListener('click', () => {
+            this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
+            this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
+            this.triggerEvent('oninput');
+        });*/
         break;
       case 'tab':
         key.classList.add('tab');
