@@ -199,7 +199,7 @@ var Keyboard = /*#__PURE__*/function () {
         default:
           this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
           key.addEventListener("click", function () {
-            _this3.textArea.value = _this3.cursorPos > 0 ? _this3.textArea.value.slice(0, _this3.cursorPos) + symbol + _this3.textArea.value.slice(_this3.cursorPos) : _this3.textArea.value + symbol;
+            _this3.textArea.value = !_this3.textArea.value.length ? _this3.textArea.value + symbol : _this3.textArea.value.slice(0, _this3.cursorPos) + symbol + _this3.textArea.value.slice(_this3.cursorPos);
             // this.textArea.value += this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
             _this3.cursorPos += 1;
             _this3.triggerEvent("oninput");

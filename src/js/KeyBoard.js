@@ -202,11 +202,12 @@ export class Keyboard {
       default:
         this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
         key.addEventListener("click", () => {
-          this.textArea.value = (this.cursorPos > 0) ? 
-            this.textArea.value.slice(0, this.cursorPos) + symbol + this.textArea.value.slice(this.cursorPos) :
-            this.textArea.value + symbol;
+          this.textArea.value = (!this.textArea.value.length) ? 
+            this.textArea.value + symbol :
+            this.textArea.value.slice(0, this.cursorPos) + symbol + this.textArea.value.slice(this.cursorPos);
           // this.textArea.value += this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
           this.cursorPos += 1;
+                   
           this.triggerEvent("oninput");
         });
       break;
