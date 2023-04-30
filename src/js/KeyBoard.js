@@ -135,6 +135,33 @@ export class Keyboard {
         break;
       case 'del':
         key.classList.add('del');
+
+        key.addEventListener("click", () => {
+          // check for cursor position
+          this.textArea.addEventListener('focus', () => {
+            this.sets.cursorPos = +this.getCurrentCursorPosition();
+          });
+
+          if (this.sets.cursorPos === 0) {  // beginning position
+            this.textArea.value = (this.sets.areaLength === 0) ? 
+              '' : 
+              this.textArea.value.slice(1, this.sets.areaLength);
+
+            this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos - 1 : 0;
+            this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
+          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+            this.textArea.value = this.textArea.value;
+          } else {  // intermediate position
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos) + this.textArea.value.slice(this.sets.cursorPos + 1);
+          
+            this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos - 1 : 0;
+            this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
+          }
+
+          
+
+          this.triggerEvent("oninput");
+        });
         break;
       case 'capslock':
         key.classList.add('capslock');

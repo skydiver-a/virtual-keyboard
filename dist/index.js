@@ -165,6 +165,27 @@ var Keyboard = /*#__PURE__*/function () {
           break;
         case 'del':
           key.classList.add('del');
+          key.addEventListener("click", function () {
+            // check for cursor position
+            _this3.textArea.addEventListener('focus', function () {
+              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
+            });
+            if (_this3.sets.cursorPos === 0) {
+              // beginning position
+              _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value.slice(1, _this3.sets.areaLength);
+              _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos - 1 : 0;
+              _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
+            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+              // ending position
+              _this3.textArea.value = _this3.textArea.value;
+            } else {
+              // intermediate position
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + _this3.textArea.value.slice(_this3.sets.cursorPos + 1);
+              _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos - 1 : 0;
+              _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
+            }
+            _this3.triggerEvent("oninput");
+          });
           break;
         case 'capslock':
           key.classList.add('capslock');
