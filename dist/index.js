@@ -41,7 +41,10 @@ var Keyboard = /*#__PURE__*/function () {
     });
     this.keys = [];
     this.lang = lang;
-    this.cursorPos = 0;
+    this.sets = {
+      cursorPos: 0,
+      areaLength: 0
+    };
     this.properties = {
       capsLock: false,
       shiftKey: false,
@@ -117,23 +120,30 @@ var Keyboard = /*#__PURE__*/function () {
         case 'backspace':
           key.classList.add('backspace');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n        ";
-          key.addEventListener('click', function () {
-            _this3.textArea.value = _this3.textArea.value.length > 0 ? _this3.textArea.value.slice(0, -1) : '';
-            _this3.cursorPos = _this3.cursorPos > 0 ? _this3.cursorPos - 1 : 0;
-            _this3.triggerEvent('oninput');
-          });
+
+          /*
+                  this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
+          
+                  key.addEventListener('click', () => {
+                      this.textArea.value = (this.textArea.value.length > 0) ? this.textArea.value.slice(0, -1) : '';
+                      this.cursorPos = (this.cursorPos > 0) ? this.cursorPos - 1 : 0;
+                      this.triggerEvent('oninput');
+                  });*/
           break;
         case 'tab':
           key.classList.add('tab');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n        ";
-          this.textArea.addEventListener('focus', function () {
-            _this3.cursorPos = _this3.getCurrentCursorPosition();
-          });
-          key.addEventListener('click', function () {
-            _this3.textArea.value = _this3.cursorPos > 0 ? _this3.textArea.value.slice(0, _this3.cursorPos) + '    ' + _this3.textArea.value.slice(_this3.cursorPos) : _this3.textArea.value + '    ';
-            _this3.cursorPos += 4;
-            _this3.triggerEvent('oninput');
-          });
+          /*
+                  this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
+          
+                  key.addEventListener('click', () => {
+                    this.textArea.value = (this.cursorPos > 0) ? 
+                      this.textArea.value.slice(0, this.cursorPos) + '    ' + this.textArea.value.slice(this.cursorPos) :
+                      this.textArea.value + '    ';
+          
+                    this.cursorPos += 4;
+                    this.triggerEvent('oninput');
+                  });*/
           break;
         case 'del':
           key.classList.add('del');
@@ -197,11 +207,23 @@ var Keyboard = /*#__PURE__*/function () {
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-angle-right\"></i>\n          </span>\n        ";
           break;
         default:
-          this.cursorPos = this.textArea.addEventListener('focus', this.getCurrentCursorPosition);
           key.addEventListener("click", function () {
-            _this3.textArea.value = !_this3.textArea.value.length ? _this3.textArea.value + symbol : _this3.textArea.value.slice(0, _this3.cursorPos) + symbol + _this3.textArea.value.slice(_this3.cursorPos);
-            // this.textArea.value += this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
-            _this3.cursorPos += 1;
+            // check for cursor position
+            _this3.textArea.addEventListener('focus', function () {
+              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
+            });
+            if (_this3.sets.cursorPos === 0) {
+              // beginning position
+              _this3.textArea.value = _this3.sets.areaLength === 0 ? _this3.textArea.value + symbol : symbol + _this3.textArea.value.slice(0, _this3.sets.areaLength);
+            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+              // ending position
+              _this3.textArea.value += symbol;
+            } else {
+              // intermediate position
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + symbol + _this3.textArea.value.slice(_this3.sets.cursorPos);
+            }
+            _this3.sets.cursorPos++;
+            _this3.sets.areaLength++;
             _this3.triggerEvent("oninput");
           });
           break;
