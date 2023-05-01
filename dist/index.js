@@ -49,8 +49,8 @@ var Keyboard = /*#__PURE__*/function () {
     this.properties = {
       capsLock: false,
       shiftKey: false,
-      control: false,
-      alt: false
+      controlKey: false,
+      altKey: false
     };
     this.eventHandlers = {
       oninput: null,
@@ -67,8 +67,11 @@ var Keyboard = /*#__PURE__*/function () {
       document.body.append(this.container);
       this.container.append(this.textArea);
       this.container.append(this.keyBoard);
-      this.keyBoardKeys = this.createKeys();
-      this.keyBoard.append(this.keyBoardKeys);
+      /*
+          this.createGroups();
+          this.createKeys();
+            */
+      this.keyBoard.append(this.createKeys());
       this.textArea.addEventListener('focus', function (letter) {
         _this.open(letter.value, function (currentValue) {
           letter.value = currentValue;
@@ -86,6 +89,23 @@ var Keyboard = /*#__PURE__*/function () {
       (_node$classList = node.classList).add.apply(_node$classList, classes);
       return node;
     }
+    /*
+      createGroups() {
+        for ( let i = 0; i < this.groups.length; i++) {
+          this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
+        }
+      }
+    
+      createKeys() {
+        for (let i = 0; i < this.groups.length; i++) {
+          for ( let j = 0; j < this.lang[i].length; j++) {
+            const key = this.createDOMNode('', 'button', 'keyboard__key');
+            this.keys.push(key);
+            this.groups[i].append(key);
+          }
+        }
+      }
+    */
   }, {
     key: "createKeys",
     value: function createKeys() {
@@ -249,6 +269,7 @@ var Keyboard = /*#__PURE__*/function () {
             _this3.textArea.addEventListener('focus', function () {
               _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
             });
+            symbol = _this3.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
             if (_this3.sets.cursorPos === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? _this3.textArea.value + symbol : symbol + _this3.textArea.value.slice(0, _this3.sets.areaLength);
@@ -296,6 +317,10 @@ var Keyboard = /*#__PURE__*/function () {
     key: "toggleCapsLock",
     value: function toggleCapsLock() {
       this.properties.capsLock = !this.properties.capsLock;
+      /*
+          document.querySelectorAll('.symbol').forEach(el => {
+            el.innerHTML = (this.properties.capsLock) ? el.textContent.toUpperCase() : el.textContent.toLowerCase();
+          });*/
     }
   }]);
   return Keyboard;

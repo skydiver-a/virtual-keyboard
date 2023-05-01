@@ -17,8 +17,8 @@ export class Keyboard {
     this.properties = {
       capsLock: false,
       shiftKey: false,
-      control: false,
-      alt: false,
+      controlKey: false,
+      altKey: false,
     };
     this.eventHandlers = {
       oninput: null,
@@ -34,8 +34,11 @@ export class Keyboard {
     document.body.append(this.container);
     this.container.append(this.textArea);
     this.container.append(this.keyBoard);
-    this.keyBoardKeys = this.createKeys()
-    this.keyBoard.append(this.keyBoardKeys);
+/*
+    this.createGroups();
+    this.createKeys();
+      */
+    this.keyBoard.append(this.createKeys());
 
     this.textArea.addEventListener('focus', (letter) => {
       this.open(letter.value, currentValue => {
@@ -49,7 +52,23 @@ export class Keyboard {
     node.classList.add(...classes);
     return node;
   }
+/*
+  createGroups() {
+    for ( let i = 0; i < this.groups.length; i++) {
+      this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
+    }
+  }
 
+  createKeys() {
+    for (let i = 0; i < this.groups.length; i++) {
+      for ( let j = 0; j < this.lang[i].length; j++) {
+        const key = this.createDOMNode('', 'button', 'keyboard__key');
+        this.keys.push(key);
+        this.groups[i].append(key);
+      }
+    }
+  }
+*/
   createKeys() {
     const fragment = document.createDocumentFragment();
     // TODO: think about two symbols on some keys
@@ -165,7 +184,7 @@ export class Keyboard {
         
         key.addEventListener("click", () => {
           key.classList.toggle("pressed");
-          this.toggleCapsLock();          
+          this.toggleCapsLock();  
         });
         break;
       case 'enter':
@@ -255,6 +274,8 @@ export class Keyboard {
             this.sets.cursorPos = +this.getCurrentCursorPosition();
           });
 
+          symbol = this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();  
+
           if (this.sets.cursorPos === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ?
               this.textArea.value + symbol :
@@ -298,5 +319,9 @@ export class Keyboard {
 
   toggleCapsLock() {
     this.properties.capsLock = !this.properties.capsLock; 
+/*
+    document.querySelectorAll('.symbol').forEach(el => {
+      el.innerHTML = (this.properties.capsLock) ? el.textContent.toUpperCase() : el.textContent.toLowerCase();
+    });*/
   } 
 }
