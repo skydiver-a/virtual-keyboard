@@ -226,10 +226,12 @@ var Keyboard = /*#__PURE__*/function () {
         case 'shift_left':
           key.classList.add('shift_left');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-up\"></i>\n          </span>\n          ";
+          key.addEventListener('click', function () {});
           break;
         case 'shift_right':
           key.classList.add('shift_right');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-up\"></i>\n          </span>\n          ";
+          key.addEventListener('click', function () {});
           break;
         case 'win':
           key.classList.add("win");
@@ -432,6 +434,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.onload = function () {
   new _js_KeyBoard__WEBPACK_IMPORTED_MODULE_0__.Keyboard().init();
+  alert('App works better in Mozilla FireFox ¯\\_(ツ)_/¯');
 };
 })();
 

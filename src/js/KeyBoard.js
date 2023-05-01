@@ -207,6 +207,7 @@ export class Keyboard {
             <i class="fa-solid fa-arrow-up"></i>
           </span>
           `;
+        key.addEventListener('click', () => {})
         break;
       case 'shift_right':
         key.classList.add('shift_right');
@@ -215,6 +216,7 @@ export class Keyboard {
             <i class="fa-solid fa-arrow-up"></i>
           </span>
           `;
+        key.addEventListener('click', () => {})
         break;
       case 'win':
         key.classList.add("win");
