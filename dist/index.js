@@ -195,7 +195,7 @@ var Keyboard = /*#__PURE__*/function () {
             });
             if (_this3.sets.cursorPos === 0) {
               // beginning position
-              _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value.slice(1, _this3.sets.areaLength);
+              _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value.slice(1);
             } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
               // ending position
               return;
@@ -218,12 +218,10 @@ var Keyboard = /*#__PURE__*/function () {
         case 'enter':
           key.classList.add('enter');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-level-down fa-rotate-90\"></i>\n          </span>\n          ";
-          /*
-          keyElem.addEventListener("click", () => {
-          this.properties.value += "\n";
-          this._triggerEvent("oninput");
+          key.addEventListener("click", function () {
+            _this3.textArea.value += "\n";
+            _this3.triggerEvent("oninput");
           });
-          */
           break;
         case 'shift_left':
           key.classList.add('shift_left');

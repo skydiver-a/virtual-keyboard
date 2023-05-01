@@ -166,7 +166,7 @@ export class Keyboard {
           if (this.sets.cursorPos === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ? 
               '' : 
-              this.textArea.value.slice(1, this.sets.areaLength);
+              this.textArea.value.slice(1);
           } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
             return;
           } else {  // intermediate position
@@ -175,7 +175,7 @@ export class Keyboard {
           
           this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos : 0;
           this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;     
-
+          
           this.triggerEvent("oninput");
         });
         break;
@@ -194,12 +194,11 @@ export class Keyboard {
             <i class="fas fa-level-down fa-rotate-90"></i>
           </span>
           `;
-        /*
-    keyElem.addEventListener("click", () => {
-        this.properties.value += "\n";
-        this._triggerEvent("oninput");
-    });
-    */
+    
+        key.addEventListener("click", () => {
+          this.textArea.value += "\n";
+          this.triggerEvent("oninput");
+        });
         break;
       case 'shift_left':
         key.classList.add('shift_left');
