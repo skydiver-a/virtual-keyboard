@@ -50,7 +50,8 @@ var Keyboard = /*#__PURE__*/function () {
       capsLock: false,
       shiftKey: false,
       controlKey: false,
-      altKey: false
+      altKey: false,
+      winKey: false
     };
     this.eventHandlers = {
       oninput: null,
@@ -116,7 +117,7 @@ var Keyboard = /*#__PURE__*/function () {
         _this2.keyBoard.append(_this2.groups[i] = _this2.createDOMNode(_this2.groups[i], 'div', 'keyboard__group'));
         _this2.lang[i].forEach(function (el) {
           var key = _this2.createDOMNode('', 'button', 'keyboard__key');
-          var symbolKey = !_this2.properties.shiftKey || !_this2.properties.capsLock ? el[0] : el[1]; // ?
+          var symbolKey = el[0]; // ?
 
           key.innerHTML = _this2.createSymbol(symbolKey);
           _this2.getSpecialChars(key, symbolKey);
@@ -224,18 +225,37 @@ var Keyboard = /*#__PURE__*/function () {
           });
           break;
         case 'shift_left':
-          key.classList.add('shift_left');
+          key.classList.add('shift', 'shift_left');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-up\"></i>\n          </span>\n          ";
-          key.addEventListener('click', function () {});
+          key.addEventListener('click', function () {
+            _this3.toggleShiftKey();
+          });
           break;
         case 'shift_right':
-          key.classList.add('shift_right');
+          key.classList.add('shift', 'shift_right');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-up\"></i>\n          </span>\n          ";
-          key.addEventListener('click', function () {});
+          key.addEventListener('click', function () {
+            _this3.toggleShiftKey();
+          });
+          break;
+        case 'ctrl':
+          key.classList.add("ctrl");
+          key.addEventListener('click', function () {
+            _this3.toggleControlKey();
+          });
+          break;
+        case 'alt':
+          key.classList.add("alt");
+          key.addEventListener('click', function () {
+            _this3.toggleAltKey();
+          });
           break;
         case 'win':
           key.classList.add("win");
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-brands fa-windows\"></i>\n          </span>\n        ";
+          key.addEventListener('click', function () {
+            _this3.toggleWinKey();
+          });
           break;
         case 'space':
           key.classList.add('space');
@@ -270,6 +290,10 @@ var Keyboard = /*#__PURE__*/function () {
               _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
             });
             symbol = _this3.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
+            if (_this3.properties.shiftKey) {
+              symbol = symbol.toUpperCase();
+              _this3.toggleShiftKey();
+            }
             if (_this3.sets.cursorPos === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? _this3.textArea.value + symbol : symbol + _this3.textArea.value.slice(0, _this3.sets.areaLength);
@@ -321,6 +345,36 @@ var Keyboard = /*#__PURE__*/function () {
           document.querySelectorAll('.symbol').forEach(el => {
             el.innerHTML = (this.properties.capsLock) ? el.textContent.toUpperCase() : el.textContent.toLowerCase();
           });*/
+    }
+  }, {
+    key: "toggleShiftKey",
+    value: function toggleShiftKey() {
+      this.properties.shiftKey = !this.properties.shiftKey;
+      document.querySelectorAll('.shift').forEach(function (el) {
+        el.classList.toggle('pressed');
+      });
+    }
+  }, {
+    key: "toggleControlKey",
+    value: function toggleControlKey() {
+      this.properties.controlKey = !this.properties.controlKey;
+      document.querySelectorAll('.ctrl').forEach(function (el) {
+        el.classList.toggle('pressed');
+      });
+    }
+  }, {
+    key: "toggleAltKey",
+    value: function toggleAltKey() {
+      this.properties.altKey = !this.properties.altKey;
+      document.querySelectorAll('.alt').forEach(function (el) {
+        el.classList.toggle('pressed');
+      });
+    }
+  }, {
+    key: "toggleWinKey",
+    value: function toggleWinKey() {
+      this.properties.winKey = !this.properties.winKey;
+      document.querySelector('.win').classList.toggle('pressed');
     }
   }]);
   return Keyboard;
@@ -434,7 +488,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.onload = function () {
   new _js_KeyBoard__WEBPACK_IMPORTED_MODULE_0__.Keyboard().init();
-  alert('App works better in Mozilla FireFox ¯\\_(ツ)_/¯');
+  alert('App works better in Mozilla FireFox ¯\\_(ツ)_/¯.\nStill NO switching languages, spacebar and navigation keys.');
 };
 })();
 

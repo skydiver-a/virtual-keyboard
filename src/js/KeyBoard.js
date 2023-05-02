@@ -19,6 +19,7 @@ export class Keyboard {
       shiftKey: false,
       controlKey: false,
       altKey: false,
+      winKey: false,
     };
     this.eventHandlers = {
       oninput: null,
@@ -76,7 +77,7 @@ export class Keyboard {
       this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
       this.lang[i].forEach(el => {
         const key = this.createDOMNode('', 'button', 'keyboard__key');
-        const symbolKey = (!this.properties.shiftKey || !this.properties.capsLock) ? el[0] : el[1]; // ?
+        const symbolKey = el[0]; // ?
 
         key.innerHTML = this.createSymbol(symbolKey);
 
@@ -201,23 +202,39 @@ export class Keyboard {
         });
         break;
       case 'shift_left':
-        key.classList.add('shift_left');
+        key.classList.add('shift', 'shift_left');
         key.innerHTML = `
           <span class='symbol'>
             <i class="fa-solid fa-arrow-up"></i>
           </span>
           `;
-        key.addEventListener('click', () => {})
+        key.addEventListener('click', () => {
+          this.toggleShiftKey();
+        });
         break;
       case 'shift_right':
-        key.classList.add('shift_right');
+        key.classList.add('shift', 'shift_right');
         key.innerHTML = `
           <span class='symbol'>
             <i class="fa-solid fa-arrow-up"></i>
           </span>
           `;
-        key.addEventListener('click', () => {})
+        key.addEventListener('click', () => {
+          this.toggleShiftKey();
+        });
         break;
+      case 'ctrl':
+        key.classList.add("ctrl");
+        key.addEventListener('click', () => {
+          this.toggleControlKey();
+        });
+      break;
+      case 'alt':
+        key.classList.add("alt");
+        key.addEventListener('click', () => {
+          this.toggleAltKey();
+        });
+      break;
       case 'win':
         key.classList.add("win");
         key.innerHTML = `
@@ -225,7 +242,10 @@ export class Keyboard {
             <i class="fa-brands fa-windows"></i>
           </span>
         `;
-        break;
+        key.addEventListener('click', () => {
+          this.toggleWinKey();
+        });
+      break;
       case 'space':
         key.classList.add('space');
         key.innerHTML = `<span class='symbol'>&nbsp;</span>`;
@@ -275,7 +295,12 @@ export class Keyboard {
             this.sets.cursorPos = +this.getCurrentCursorPosition();
           });
 
-          symbol = this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();  
+          symbol = this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase(); 
+
+          if (this.properties.shiftKey) {
+            symbol = symbol.toUpperCase();
+            this.toggleShiftKey();
+          }
 
           if (this.sets.cursorPos === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ?
@@ -325,4 +350,34 @@ export class Keyboard {
       el.innerHTML = (this.properties.capsLock) ? el.textContent.toUpperCase() : el.textContent.toLowerCase();
     });*/
   } 
+
+  toggleShiftKey() {
+    this.properties.shiftKey = !this.properties.shiftKey;
+
+    document.querySelectorAll('.shift').forEach(el => {
+      el.classList.toggle('pressed');
+    });
+  } 
+
+  toggleControlKey() {
+    this.properties.controlKey = !this.properties.controlKey;
+
+    document.querySelectorAll('.ctrl').forEach(el => {
+      el.classList.toggle('pressed');
+    });
+  }
+
+  toggleAltKey() {
+    this.properties.altKey = !this.properties.altKey;
+
+    document.querySelectorAll('.alt').forEach(el => {
+      el.classList.toggle('pressed');
+    });
+  }
+
+  toggleWinKey() {
+    this.properties.winKey = !this.properties.winKey;
+
+    document.querySelector('.win').classList.toggle('pressed');
+  }
 }
