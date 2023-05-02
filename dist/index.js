@@ -43,7 +43,8 @@ var Keyboard = /*#__PURE__*/function () {
     this.keys = [];
     this.lang = lang;
     this.sets = {
-      cursorPos: 0,
+      cursorPosX: 0,
+      controlPosY: 0,
       areaLength: 0
     };
     this.properties = {
@@ -78,6 +79,12 @@ var Keyboard = /*#__PURE__*/function () {
           letter.value = currentValue;
         });
       });
+
+      // check for cursor position
+      this.textArea.addEventListener('click', function (e) {
+        _this.sets.cursorPosX = e.target.selectionStart;
+        console.log(_this.sets.cursorPosX, _this.sets.areaLength);
+      });
     }
   }, {
     key: "createDOMNode",
@@ -111,6 +118,7 @@ var Keyboard = /*#__PURE__*/function () {
     key: "createKeys",
     value: function createKeys() {
       var _this2 = this;
+      // creates 64 keys here
       var fragment = document.createDocumentFragment();
       // TODO: think about two symbols on some keys
       var _loop = function _loop(i) {
@@ -120,7 +128,6 @@ var Keyboard = /*#__PURE__*/function () {
           var symbolKey = el[0]; // ?
 
           key.innerHTML = _this2.createSymbol(symbolKey);
-          // TODO: problem with call of 64 keys
           _this2.getKeys(key, symbolKey);
           _this2.keys.push(key);
           _this2.groups[i].append(key);
@@ -141,27 +148,22 @@ var Keyboard = /*#__PURE__*/function () {
     key: "getKeys",
     value: function getKeys(key, symbol) {
       var _this3 = this;
-      // check for cursor position
-      this.textArea.addEventListener('click', function (e) {
-        _this3.sets.cursorPos = e.target.selectionStart;
-        console.log(_this3.sets.cursorPos, _this3.sets.areaLength);
-      });
       switch (symbol) {
         case 'backspace':
           key.classList.add('backspace');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n        ";
           key.addEventListener("click", function () {
-            if (_this3.sets.cursorPos === 0) {
+            if (_this3.sets.cursorPosX === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value;
-            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
               // ending position
               _this3.textArea.value = _this3.textArea.value.slice(0, -1);
             } else {
               // intermediate position
-              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos - 1) + _this3.textArea.value.slice(_this3.sets.cursorPos);
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX - 1) + _this3.textArea.value.slice(_this3.sets.cursorPosX);
             }
-            _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos - 1 : 0;
+            _this3.sets.cursorPosX = _this3.sets.cursorPosX > 0 ? _this3.sets.cursorPosX - 1 : 0;
             _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
             _this3.triggerEvent("oninput");
           });
@@ -170,17 +172,17 @@ var Keyboard = /*#__PURE__*/function () {
           key.classList.add('tab');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n        ";
           key.addEventListener("click", function () {
-            if (_this3.sets.cursorPos === 0) {
+            if (_this3.sets.cursorPosX === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? '    ' : '    ' + _this3.textArea.value.slice(0, _this3.sets.areaLength);
-            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
               // ending position
               _this3.textArea.value += '    ';
             } else {
               // intermediate position
-              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + '    ' + _this3.textArea.value.slice(_this3.sets.cursorPos);
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX) + '    ' + _this3.textArea.value.slice(_this3.sets.cursorPosX);
             }
-            _this3.sets.cursorPos += 4;
+            _this3.sets.cursorPosX += 4;
             _this3.sets.areaLength += 4;
             _this3.triggerEvent("oninput");
           });
@@ -188,17 +190,17 @@ var Keyboard = /*#__PURE__*/function () {
         case 'del':
           key.classList.add('del');
           key.addEventListener("click", function () {
-            if (_this3.sets.cursorPos === 0) {
+            if (_this3.sets.cursorPosX === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value.slice(1);
-            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
               // ending position
               return;
             } else {
               // intermediate position
-              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + _this3.textArea.value.slice(_this3.sets.cursorPos + 1);
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX) + _this3.textArea.value.slice(_this3.sets.cursorPosX + 1);
             }
-            _this3.sets.cursorPos = _this3.sets.cursorPos > 0 ? _this3.sets.cursorPos : 0;
+            _this3.sets.cursorPosX = _this3.sets.cursorPosX > 0 ? _this3.sets.cursorPosX : 0;
             _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
             _this3.triggerEvent("oninput");
           });
@@ -255,17 +257,17 @@ var Keyboard = /*#__PURE__*/function () {
           key.classList.add('space');
           key.innerHTML = "<span class='symbol'>&nbsp;</span>";
           key.addEventListener("click", function () {
-            if (_this3.sets.cursorPos === 0) {
+            if (_this3.sets.cursorPosX === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? ' ' : ' ' + _this3.textArea.value.slice(0, _this3.sets.areaLength);
-            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
               // ending position
               _this3.textArea.value += ' ';
             } else {
               // intermediate position
-              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + ' ' + _this3.textArea.value.slice(_this3.sets.cursorPos);
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX) + ' ' + _this3.textArea.value.slice(_this3.sets.cursorPosX);
             }
-            _this3.sets.cursorPos++;
+            _this3.sets.cursorPosX++;
             _this3.sets.areaLength++;
             _this3.triggerEvent("oninput");
           });
@@ -293,17 +295,17 @@ var Keyboard = /*#__PURE__*/function () {
               symbol = symbol.toUpperCase();
               _this3.toggleShiftKey();
             }
-            if (_this3.sets.cursorPos === 0) {
+            if (_this3.sets.cursorPosX === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? _this3.textArea.value + symbol : symbol + _this3.textArea.value.slice(0, _this3.sets.areaLength);
-            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
               // ending position
               _this3.textArea.value += symbol;
             } else {
               // intermediate position
-              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + symbol + _this3.textArea.value.slice(_this3.sets.cursorPos);
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX) + symbol + _this3.textArea.value.slice(_this3.sets.cursorPosX);
             }
-            _this3.sets.cursorPos++;
+            _this3.sets.cursorPosX++;
             _this3.sets.areaLength++;
             _this3.triggerEvent("oninput");
           });

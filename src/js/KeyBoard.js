@@ -11,7 +11,8 @@ export class Keyboard {
     this.keys = [];
     this.lang = lang;
     this.sets = {
-      cursorPos: 0,
+      cursorPosX: 0,
+      controlPosY: 0,
       areaLength: 0,
     };
     this.properties = {
@@ -46,6 +47,12 @@ export class Keyboard {
         letter.value = currentValue;
       });
     });
+
+    // check for cursor position
+    this.textArea.addEventListener('click', (e) => {
+      this.sets.cursorPosX = e.target.selectionStart;
+      console.log(this.sets.cursorPosX, this.sets.areaLength)
+    });
   }
 
   createDOMNode(node, element, ...classes) {
@@ -70,7 +77,7 @@ export class Keyboard {
       }
     }
   */
-  createKeys() {
+  createKeys() {  // creates 64 keys here
     const fragment = document.createDocumentFragment();
     // TODO: think about two symbols on some keys
     for (let i = 0; i < this.groups.length; i++) {
@@ -80,7 +87,7 @@ export class Keyboard {
         const symbolKey = el[0]; // ?
 
         key.innerHTML = this.createSymbol(symbolKey);
-        // TODO: problem with call of 64 keys
+
         this.getKeys(key, symbolKey);
         this.keys.push(key);
         this.groups[i].append(key)
@@ -96,11 +103,7 @@ export class Keyboard {
   }
 
   getKeys(key, symbol) {
-    // check for cursor position
-    this.textArea.addEventListener('click', (e) => {
-      this.sets.cursorPos = e.target.selectionStart;
-      console.log(this.sets.cursorPos, this.sets.areaLength)
-    });
+    
     switch (symbol) {
       case 'backspace':
         key.classList.add('backspace');
@@ -111,15 +114,15 @@ export class Keyboard {
         `;
 
         key.addEventListener("click", () => {
-          if (this.sets.cursorPos === 0) {  // beginning position
+          if (this.sets.cursorPosX === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ? '' : this.textArea.value;
-          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
             this.textArea.value = this.textArea.value.slice(0, -1);
           } else {  // intermediate position
-            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos - 1) + this.textArea.value.slice(this.sets.cursorPos);
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX - 1) + this.textArea.value.slice(this.sets.cursorPosX);
           }
 
-          this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos - 1 : 0;
+          this.sets.cursorPosX = (this.sets.cursorPosX > 0) ? this.sets.cursorPosX - 1 : 0;
           this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
 
           this.triggerEvent("oninput");
@@ -134,17 +137,17 @@ export class Keyboard {
         `;
 
         key.addEventListener("click", () => {
-          if (this.sets.cursorPos === 0) {  // beginning position
+          if (this.sets.cursorPosX === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ?
               '    ' :
               '    ' + this.textArea.value.slice(0, this.sets.areaLength);
-          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
             this.textArea.value += '    ';
           } else {  // intermediate position
-            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos) + '    ' + this.textArea.value.slice(this.sets.cursorPos);
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX) + '    ' + this.textArea.value.slice(this.sets.cursorPosX);
           }
 
-          this.sets.cursorPos += 4;
+          this.sets.cursorPosX += 4;
           this.sets.areaLength += 4;
 
           this.triggerEvent("oninput");
@@ -154,17 +157,17 @@ export class Keyboard {
         key.classList.add('del');
 
         key.addEventListener("click", () => {
-          if (this.sets.cursorPos === 0) {  // beginning position
+          if (this.sets.cursorPosX === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ?
               '' :
               this.textArea.value.slice(1);
-          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
             return;
           } else {  // intermediate position
-            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos) + this.textArea.value.slice(this.sets.cursorPos + 1);
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX) + this.textArea.value.slice(this.sets.cursorPosX + 1);
           }
 
-          this.sets.cursorPos = (this.sets.cursorPos > 0) ? this.sets.cursorPos : 0;
+          this.sets.cursorPosX = (this.sets.cursorPosX > 0) ? this.sets.cursorPosX : 0;
           this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
 
           this.triggerEvent("oninput");
@@ -241,17 +244,17 @@ export class Keyboard {
         key.innerHTML = `<span class='symbol'>&nbsp;</span>`;
 
         key.addEventListener("click", () => {
-          if (this.sets.cursorPos === 0) {  // beginning position
+          if (this.sets.cursorPosX === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ?
               ' ' :
               ' ' + this.textArea.value.slice(0, this.sets.areaLength);
-          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
             this.textArea.value += ' ';
           } else {  // intermediate position
-            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos) + ' ' + this.textArea.value.slice(this.sets.cursorPos);
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX) + ' ' + this.textArea.value.slice(this.sets.cursorPosX);
           }
 
-          this.sets.cursorPos++;
+          this.sets.cursorPosX++;
           this.sets.areaLength++;
 
           this.triggerEvent("oninput");
@@ -299,17 +302,17 @@ export class Keyboard {
             this.toggleShiftKey();
           }
 
-          if (this.sets.cursorPos === 0) {  // beginning position
+          if (this.sets.cursorPosX === 0) {  // beginning position
             this.textArea.value = (this.sets.areaLength === 0) ?
               this.textArea.value + symbol :
               symbol + this.textArea.value.slice(0, this.sets.areaLength);
-          } else if (this.sets.cursorPos === this.sets.areaLength) {  // ending position
+          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
             this.textArea.value += symbol;
           } else {  // intermediate position
-            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPos) + symbol + this.textArea.value.slice(this.sets.cursorPos);
+            this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX) + symbol + this.textArea.value.slice(this.sets.cursorPosX);
           }
 
-          this.sets.cursorPos++;
+          this.sets.cursorPosX++;
           this.sets.areaLength++;
 
           this.triggerEvent("oninput");
