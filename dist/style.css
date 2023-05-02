@@ -112,5 +112,8 @@ body {
   resize: none;
   overflow-y: scroll;
 }
+.textarea::-webkit-scrollbar {
+  display: none;
+}
 
 /*# sourceMappingURL=style.css.map*/
