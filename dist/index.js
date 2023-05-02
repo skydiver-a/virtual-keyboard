@@ -120,7 +120,7 @@ var Keyboard = /*#__PURE__*/function () {
           var symbolKey = el[0]; // ?
 
           key.innerHTML = _this2.createSymbol(symbolKey);
-          _this2.getSpecialChars(key, symbolKey);
+          _this2.getKeys(key, symbolKey);
           _this2.keys.push(key);
           _this2.groups[i].append(key);
         });
@@ -137,18 +137,19 @@ var Keyboard = /*#__PURE__*/function () {
       return "<span class='symbol'>".concat(symbol, "</span>");
     }
   }, {
-    key: "getSpecialChars",
-    value: function getSpecialChars(key, symbol) {
+    key: "getKeys",
+    value: function getKeys(key, symbol) {
       var _this3 = this;
+      // check for cursor position
+      this.textArea.addEventListener('focus', function () {
+        _this3.sets.cursorPos = _this3.getCurrentCursorPosition(_this3.textArea);
+        console.log(_this3.sets.cursorPos, _this3.sets.areaLength);
+      });
       switch (symbol) {
         case 'backspace':
           key.classList.add('backspace');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-long-arrow-left\"></i>\n          </span>\n        ";
           key.addEventListener("click", function () {
-            // check for cursor position
-            _this3.textArea.addEventListener('focus', function () {
-              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
-            });
             if (_this3.sets.cursorPos === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value;
@@ -168,10 +169,6 @@ var Keyboard = /*#__PURE__*/function () {
           key.classList.add('tab');
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fa-solid fa-arrow-right-arrow-left\"></i>\n          </span>\n        ";
           key.addEventListener("click", function () {
-            // check for cursor position
-            _this3.textArea.addEventListener('focus', function () {
-              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
-            });
             if (_this3.sets.cursorPos === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? '    ' : '    ' + _this3.textArea.value.slice(0, _this3.sets.areaLength);
@@ -190,10 +187,6 @@ var Keyboard = /*#__PURE__*/function () {
         case 'del':
           key.classList.add('del');
           key.addEventListener("click", function () {
-            // check for cursor position
-            _this3.textArea.addEventListener('focus', function () {
-              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
-            });
             if (_this3.sets.cursorPos === 0) {
               // beginning position
               _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value.slice(1);
@@ -260,12 +253,21 @@ var Keyboard = /*#__PURE__*/function () {
         case 'space':
           key.classList.add('space');
           key.innerHTML = "<span class='symbol'>&nbsp;</span>";
-          /*
-          key.addEventListener("click", () => {
-              this.properties.value += " ";
-              this._triggerEvent("oninput");
+          key.addEventListener("click", function () {
+            if (_this3.sets.cursorPos === 0) {
+              // beginning position
+              _this3.textArea.value = _this3.sets.areaLength === 0 ? ' ' : ' ' + _this3.textArea.value.slice(0, _this3.sets.areaLength);
+            } else if (_this3.sets.cursorPos === _this3.sets.areaLength) {
+              // ending position
+              _this3.textArea.value += ' ';
+            } else {
+              // intermediate position
+              _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPos) + ' ' + _this3.textArea.value.slice(_this3.sets.cursorPos);
+            }
+            _this3.sets.cursorPos++;
+            _this3.sets.areaLength++;
+            _this3.triggerEvent("oninput");
           });
-          */
           break;
         case 'up':
           key.classList.add('up');
@@ -285,10 +287,6 @@ var Keyboard = /*#__PURE__*/function () {
           break;
         default:
           key.addEventListener("click", function () {
-            // check for cursor position
-            _this3.textArea.addEventListener('focus', function () {
-              _this3.sets.cursorPos = +_this3.getCurrentCursorPosition();
-            });
             symbol = _this3.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
             if (_this3.properties.shiftKey) {
               symbol = symbol.toUpperCase();
@@ -313,8 +311,15 @@ var Keyboard = /*#__PURE__*/function () {
     }
   }, {
     key: "getCurrentCursorPosition",
-    value: function getCurrentCursorPosition() {
-      return document.querySelector('.textarea').selectionStart;
+    value: function getCurrentCursorPosition(obj) {
+      if (document.selection) {
+        var sel = document.selection.createRange();
+        var clone = sel.duplicate();
+        sel.collapse(true);
+        clone.moveToElementText(obj);
+        clone.setEndPoint('EndToEnd', sel);
+        return clone.text.length;
+      } else return obj.selectionStart;
     }
   }, {
     key: "open",
@@ -488,7 +493,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.onload = function () {
   new _js_KeyBoard__WEBPACK_IMPORTED_MODULE_0__.Keyboard().init();
-  alert('App works better in Mozilla FireFox ¯\\_(ツ)_/¯.\nStill NO switching languages, spacebar and navigation keys.');
+  alert('Cursor moving works in Mozilla FireFox ¯\\_(ツ)_/¯.\nStill NO switching languages and navigation keys.');
 };
 })();
 
