@@ -120,6 +120,7 @@ var Keyboard = /*#__PURE__*/function () {
           var symbolKey = el[0]; // ?
 
           key.innerHTML = _this2.createSymbol(symbolKey);
+          // TODO: problem with call of 64 keys
           _this2.getKeys(key, symbolKey);
           _this2.keys.push(key);
           _this2.groups[i].append(key);
@@ -141,8 +142,8 @@ var Keyboard = /*#__PURE__*/function () {
     value: function getKeys(key, symbol) {
       var _this3 = this;
       // check for cursor position
-      this.textArea.addEventListener('focus', function () {
-        _this3.sets.cursorPos = _this3.getCurrentCursorPosition(_this3.textArea);
+      this.textArea.addEventListener('click', function (e) {
+        _this3.sets.cursorPos = e.target.selectionStart;
         console.log(_this3.sets.cursorPos, _this3.sets.areaLength);
       });
       switch (symbol) {
@@ -308,18 +309,6 @@ var Keyboard = /*#__PURE__*/function () {
           });
           break;
       }
-    }
-  }, {
-    key: "getCurrentCursorPosition",
-    value: function getCurrentCursorPosition(obj) {
-      if (document.selection) {
-        var sel = document.selection.createRange();
-        var clone = sel.duplicate();
-        sel.collapse(true);
-        clone.moveToElementText(obj);
-        clone.setEndPoint('EndToEnd', sel);
-        return clone.text.length;
-      } else return obj.selectionStart;
     }
   }, {
     key: "open",
@@ -493,7 +482,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.onload = function () {
   new _js_KeyBoard__WEBPACK_IMPORTED_MODULE_0__.Keyboard().init();
-  alert('Cursor moving works in Mozilla FireFox ¯\\_(ツ)_/¯.\nStill NO switching languages and navigation keys.');
+  alert('Still NO switching languages and navigation keys¯\\_(ツ)_/¯');
 };
 })();
 

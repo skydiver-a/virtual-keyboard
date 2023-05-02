@@ -80,7 +80,7 @@ export class Keyboard {
         const symbolKey = el[0]; // ?
 
         key.innerHTML = this.createSymbol(symbolKey);
-
+        // TODO: problem with call of 64 keys
         this.getKeys(key, symbolKey);
         this.keys.push(key);
         this.groups[i].append(key)
@@ -97,11 +97,10 @@ export class Keyboard {
 
   getKeys(key, symbol) {
     // check for cursor position
-    this.textArea.addEventListener('focus', () => {
-      this.sets.cursorPos = this.getCurrentCursorPosition(this.textArea);
+    this.textArea.addEventListener('click', (e) => {
+      this.sets.cursorPos = e.target.selectionStart;
       console.log(this.sets.cursorPos, this.sets.areaLength)
     });
-
     switch (symbol) {
       case 'backspace':
         key.classList.add('backspace');
@@ -317,18 +316,6 @@ export class Keyboard {
         });
         break;
     }
-  }
-
-  getCurrentCursorPosition(obj) {
-    if (document.selection) {
-      let sel = document.selection.createRange();
-      let clone = sel.duplicate();
-
-      sel.collapse(true);
-      clone.moveToElementText(obj);
-      clone.setEndPoint('EndToEnd', sel);
-      return clone.text.length;
-    } else return obj.selectionStart;
   }
 
   open(initialValue, oninput, onclose) {
