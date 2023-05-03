@@ -1,4 +1,5 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/js/KeyBoard.js":
@@ -7,14 +8,12 @@
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Keyboard": () => (/* binding */ Keyboard)
 /* harmony export */ });
 /* harmony import */ var _en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./en */ "./src/js/en.js");
 /* harmony import */ var _ru__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ru */ "./src/js/ru.js");
-/* harmony import */ var _ru__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_ru__WEBPACK_IMPORTED_MODULE_1__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -31,7 +30,6 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 
 var Keyboard = /*#__PURE__*/function () {
   function Keyboard() {
-    var lang = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _en__WEBPACK_IMPORTED_MODULE_0__.en;
     _classCallCheck(this, Keyboard);
     this.container = '';
     this.textArea = '';
@@ -41,11 +39,12 @@ var Keyboard = /*#__PURE__*/function () {
       return '';
     });
     this.keys = [];
-    this.lang = lang;
+    this.switchLang = false;
+    this.lang = this.switchLang ? _en__WEBPACK_IMPORTED_MODULE_0__.en : _ru__WEBPACK_IMPORTED_MODULE_1__.ru;
     this.sets = {
       cursorPosX: 0,
-      controlPosY: 0,
-      areaLength: 0
+      cursorPosY: 0,
+      areaLength: [0]
     };
     this.properties = {
       capsLock: false,
@@ -69,11 +68,14 @@ var Keyboard = /*#__PURE__*/function () {
       document.body.append(this.container);
       this.container.append(this.textArea);
       this.container.append(this.keyBoard);
-      /*
-          this.createGroups();
-          this.createKeys();
+      /*  
+       this.createGroups();
+       this.createKeys();
+       this.fillKeysBySymbols();
             */
       this.keyBoard.append(this.createKeys());
+
+      // check for symbols
       this.textArea.addEventListener('focus', function (letter) {
         _this.open(letter.value, function (currentValue) {
           letter.value = currentValue;
@@ -83,7 +85,7 @@ var Keyboard = /*#__PURE__*/function () {
       // check for cursor position
       this.textArea.addEventListener('click', function (e) {
         _this.sets.cursorPosX = e.target.selectionStart;
-        console.log(_this.sets.cursorPosX, _this.sets.areaLength);
+        console.log(_this.sets.cursorPosX, _this.sets.cursorPosY, _this.sets.areaLength[_this.sets.cursorPosY]);
       });
     }
   }, {
@@ -98,21 +100,23 @@ var Keyboard = /*#__PURE__*/function () {
       return node;
     }
     /*
-      createGroups() {
-        for ( let i = 0; i < this.groups.length; i++) {
-          this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
+    createGroups() {
+      for ( let i = 0; i < this.groups.length; i++) {
+        this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
+      }
+    }
+     createKeys() {
+      for (let i = 0; i < this.groups.length; i++) {
+        for ( let j = 0; j < this.lang[i].length; j++) {
+          const key = this.createDOMNode('', 'button', 'keyboard__key');
+          this.keys.push(key);
+          this.groups[i].append(key);
         }
       }
+    }
     
-      createKeys() {
-        for (let i = 0; i < this.groups.length; i++) {
-          for ( let j = 0; j < this.lang[i].length; j++) {
-            const key = this.createDOMNode('', 'button', 'keyboard__key');
-            this.keys.push(key);
-            this.groups[i].append(key);
-          }
-        }
-      }
+    fillKeysBySymbols() {
+     }
     */
   }, {
     key: "createKeys",
@@ -125,10 +129,8 @@ var Keyboard = /*#__PURE__*/function () {
         _this2.keyBoard.append(_this2.groups[i] = _this2.createDOMNode(_this2.groups[i], 'div', 'keyboard__group'));
         _this2.lang[i].forEach(function (el) {
           var key = _this2.createDOMNode('', 'button', 'keyboard__key');
-          var symbolKey = el[0]; // ?
-
-          key.innerHTML = _this2.createSymbol(symbolKey);
-          _this2.getKeys(key, symbolKey);
+          key.innerHTML = _this2.createSymbol(el);
+          _this2.getKeys(key, el[0]);
           _this2.keys.push(key);
           _this2.groups[i].append(key);
         });
@@ -142,7 +144,9 @@ var Keyboard = /*#__PURE__*/function () {
   }, {
     key: "createSymbol",
     value: function createSymbol(symbol) {
-      return "<span class='symbol'>".concat(symbol, "</span>");
+      if (symbol[0] === symbol[1]) {
+        return "<span class='symbol'>".concat(symbol[0], "</span>");
+      } else return "\n      <span class='symbol top_left'>".concat(symbol[1], "</span>\n      <br />\n      <span class='symbol bottom_right'>").concat(symbol[0], "</span>\n      ");
     }
   }, {
     key: "getKeys",
@@ -164,7 +168,7 @@ var Keyboard = /*#__PURE__*/function () {
               _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX - 1) + _this3.textArea.value.slice(_this3.sets.cursorPosX);
             }
             _this3.sets.cursorPosX = _this3.sets.cursorPosX > 0 ? _this3.sets.cursorPosX - 1 : 0;
-            _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
+            _this3.sets.areaLength[_this3.sets.cursorPosY] = _this3.sets.areaLength[_this3.sets.cursorPosY] > 0 ? _this3.sets.areaLength[_this3.sets.cursorPosY] - 1 : 0;
             _this3.triggerEvent("oninput");
           });
           break;
@@ -174,8 +178,8 @@ var Keyboard = /*#__PURE__*/function () {
           key.addEventListener("click", function () {
             if (_this3.sets.cursorPosX === 0) {
               // beginning position
-              _this3.textArea.value = _this3.sets.areaLength === 0 ? '    ' : '    ' + _this3.textArea.value.slice(0, _this3.sets.areaLength);
-            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
+              _this3.textArea.value = _this3.sets.areaLength[_this3.sets.cursorPosY] === 0 ? '    ' : '    ' + _this3.textArea.value.slice(0, _this3.sets.areaLength);
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength[_this3.sets.cursorPosY]) {
               // ending position
               _this3.textArea.value += '    ';
             } else {
@@ -183,7 +187,7 @@ var Keyboard = /*#__PURE__*/function () {
               _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX) + '    ' + _this3.textArea.value.slice(_this3.sets.cursorPosX);
             }
             _this3.sets.cursorPosX += 4;
-            _this3.sets.areaLength += 4;
+            _this3.sets.areaLength[_this3.sets.cursorPosY] += 4;
             _this3.triggerEvent("oninput");
           });
           break;
@@ -192,8 +196,8 @@ var Keyboard = /*#__PURE__*/function () {
           key.addEventListener("click", function () {
             if (_this3.sets.cursorPosX === 0) {
               // beginning position
-              _this3.textArea.value = _this3.sets.areaLength === 0 ? '' : _this3.textArea.value.slice(1);
-            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
+              _this3.textArea.value = _this3.sets.areaLength[_this3.sets.cursorPosY] === 0 ? '' : _this3.textArea.value.slice(1);
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength[_this3.sets.cursorPosY]) {
               // ending position
               return;
             } else {
@@ -201,7 +205,7 @@ var Keyboard = /*#__PURE__*/function () {
               _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX) + _this3.textArea.value.slice(_this3.sets.cursorPosX + 1);
             }
             _this3.sets.cursorPosX = _this3.sets.cursorPosX > 0 ? _this3.sets.cursorPosX : 0;
-            _this3.sets.areaLength = _this3.sets.areaLength > 0 ? _this3.sets.areaLength - 1 : 0;
+            _this3.sets.areaLength[_this3.sets.cursorPosY] = _this3.sets.areaLength[_this3.sets.cursorPosY] > 0 ? _this3.sets.areaLength[_this3.sets.cursorPosY] - 1 : 0;
             _this3.triggerEvent("oninput");
           });
           break;
@@ -217,6 +221,9 @@ var Keyboard = /*#__PURE__*/function () {
           key.innerHTML = "\n          <span class='symbol'>\n            <i class=\"fas fa-level-down fa-rotate-90\"></i>\n          </span>\n          ";
           key.addEventListener("click", function () {
             _this3.textArea.value += "\n";
+            _this3.sets.cursorPosX = 0;
+            _this3.sets.cursorPosY++;
+            _this3.sets.areaLength.push(0);
             _this3.triggerEvent("oninput");
           });
           break;
@@ -297,8 +304,8 @@ var Keyboard = /*#__PURE__*/function () {
             }
             if (_this3.sets.cursorPosX === 0) {
               // beginning position
-              _this3.textArea.value = _this3.sets.areaLength === 0 ? _this3.textArea.value + symbol : symbol + _this3.textArea.value.slice(0, _this3.sets.areaLength);
-            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength) {
+              _this3.textArea.value = _this3.sets.areaLength[_this3.sets.cursorPosY] === 0 ? _this3.textArea.value + symbol : symbol + _this3.textArea.value.slice(0, _this3.sets.areaLength[_this3.sets.cursorPosY]);
+            } else if (_this3.sets.cursorPosX === _this3.sets.areaLength[_this3.sets.cursorPosY]) {
               // ending position
               _this3.textArea.value += symbol;
             } else {
@@ -306,7 +313,7 @@ var Keyboard = /*#__PURE__*/function () {
               _this3.textArea.value = _this3.textArea.value.slice(0, _this3.sets.cursorPosX) + symbol + _this3.textArea.value.slice(_this3.sets.cursorPosX);
             }
             _this3.sets.cursorPosX++;
-            _this3.sets.areaLength++;
+            _this3.sets.areaLength[_this3.sets.cursorPosY]++;
             _this3.triggerEvent("oninput");
           });
           break;
@@ -384,7 +391,6 @@ var Keyboard = /*#__PURE__*/function () {
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "en": () => (/* binding */ en)
@@ -397,9 +403,13 @@ var en = [[['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['5', '%'
 /*!**********************!*\
   !*** ./src/js/ru.js ***!
   \**********************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-var ru = [[['~', 'ё'], ['!', '1'], ['""', '2'], ['№', '3'], [';', '4'], ['%', '5'], [':', '6'], ['?', '7'], ['*', '8'], ['(', '9'], [')', '0'], ['_', '-'], ['+', '='], ['backspace', 'backspace']], [['tab', 'tab'], ['й', 'Й'], ['ц', 'Ц'], ['у', 'У'], ['к', 'К'], ['е', 'Е'], ['н', 'Н'], ['г', 'Г'], ['ш', 'Ш'], ['щ', 'Щ'], ['з', 'З'], ['х', 'Х'], ['ъ', 'Ъ'], ['del', 'del']], [['capslock', 'capslock'], ['ф', 'Ф'], ['ы', 'Ы'], ['в', 'В'], ['а', 'А'], ['п', 'П'], ['р', 'Р'], ['о', 'О'], ['л', 'Л'], ['д', 'Д'], ['ж', 'Ж'], ['э', 'Э'], ['enter', 'enter']], [['shift', 'shift'], ['я', 'Я'], ['ч', 'Ч'], ['с', 'С'], ['м', 'М'], ['и', 'И'], ['т', 'Т'], ['ь', 'Ь'], ['б', 'Б'], ['ю', 'Ю'], [',', '.'], ['shift', 'shift']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['ctrl', 'ctrl'], ['left', 'left'], [['up', 'up'], ['down', 'down']], ['right', 'right']]];
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ru": () => (/* binding */ ru)
+/* harmony export */ });
+var ru = [[['ё', '~'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', ';'], ['5', '%'], ['6', ':'], ['7', '?'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['+', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['й', 'Й'], ['ц', 'Ц'], ['у', 'У'], ['к', 'К'], ['е', 'Е'], ['н', 'Н'], ['г', 'Г'], ['ш', 'Ш'], ['щ', 'Щ'], ['з', 'З'], ['х', 'Х'], ['ъ', 'Ъ'], ['\\', '|'], ['del', 'del']], [['capslock', 'capslock'], ['ф', 'Ф'], ['ы', 'Ы'], ['в', 'В'], ['а', 'А'], ['п', 'П'], ['р', 'Р'], ['о', 'О'], ['л', 'Л'], ['д', 'Д'], ['ж', 'Ж'], ['э', 'Э'], ['enter', 'enter']], [['shift_left', 'shift_left'], ['я', 'Я'], ['ч', 'Ч'], ['с', 'С'], ['м', 'М'], ['и', 'И'], ['т', 'Т'], ['ь', 'Ь'], ['б', 'Б'], ['ю', 'Ю'], [',', '.'], ['shift_right', 'shift_right']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['alt', 'alt'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
 
 /***/ })
 
@@ -430,18 +440,6 @@ var ru = [[['~', 'ё'], ['!', '1'], ['""', '2'], ['№', '3'], [';', '4'], ['%',
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -472,9 +470,8 @@ var ru = [[['~', 'ё'], ['!', '1'], ['""', '2'], ['№', '3'], [';', '4'], ['%',
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
 (() => {
-"use strict";
 var __webpack_exports__ = {};
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -488,9 +485,8 @@ window.onload = function () {
 };
 })();
 
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
 (() => {
-"use strict";
 /*!********************************!*\
   !*** ./src/styles/styles.scss ***!
   \********************************/

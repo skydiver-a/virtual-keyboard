@@ -41,9 +41,32 @@ body {
   background: rgb(214, 214, 214);
   box-shadow: 5px 5px 10px #474343, -5px -5px 10px #FFFFFF;
   outline: none;
+  vertical-align: top;
+  /*
+      & span {
+        &.top_left {
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+
+        &.bottom_right {
+          position: absolute;
+          top: 5%;
+        }
+      } */
 }
 .keyboard__group button:active {
   box-shadow: 1px 1px 2px #FFF8F8, -1px -1px 2px #474343;
+}
+.keyboard__group button span {
+  display: inline-block;
+}
+.keyboard__group button span.top_left {
+  margin: 0 25px 0 0;
+}
+.keyboard__group button span.bottom_right {
+  margin: 0 10px 5px;
 }
 .keyboard__group .keyboard__key.backspace {
   width: 119px;

@@ -23,6 +23,31 @@
     &:active {
       box-shadow: 1px 1px 2px $color-light-shadow, -1px -1px 2px $color-dark-shadow;
     }
+
+    vertical-align: top;
+
+    & span {
+      display: inline-block;
+      &.top_left {
+        margin: 0 25px 0 0;
+      }
+      &.bottom_right {
+        margin: 0 10px 5px;
+      }
+    }
+/*
+    & span {
+      &.top_left {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      &.bottom_right {
+        position: absolute;
+        top: 5%;
+      }
+    } */
   }
 
   .keyboard__key {

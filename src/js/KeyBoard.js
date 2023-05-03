@@ -2,18 +2,19 @@ import { en } from "./en";
 import { ru } from "./ru";
 
 export class Keyboard {
-  constructor(lang = en) {
+  constructor() {
     this.container = '';
     this.textArea = '';
     this.keyBoard = '';
     this.keyBoardKeys = '';
     this.groups = [...Array(5)].map(() => '');
     this.keys = [];
-    this.lang = lang;
+    this.switchLang = false;
+    this.lang = this.switchLang ? en : ru;
     this.sets = {
       cursorPosX: 0,
-      controlPosY: 0,
-      areaLength: 0,
+      cursorPosY: 0,
+      areaLength: [ 0, ]
     };
     this.properties = {
       capsLock: false,
@@ -36,12 +37,14 @@ export class Keyboard {
     document.body.append(this.container);
     this.container.append(this.textArea);
     this.container.append(this.keyBoard);
-    /*
-        this.createGroups();
-        this.createKeys();
-          */
+   /*  
+    this.createGroups();
+    this.createKeys();
+    this.fillKeysBySymbols();
+         */
     this.keyBoard.append(this.createKeys());
 
+    // check for symbols
     this.textArea.addEventListener('focus', (letter) => {
       this.open(letter.value, currentValue => {
         letter.value = currentValue;
@@ -51,7 +54,7 @@ export class Keyboard {
     // check for cursor position
     this.textArea.addEventListener('click', (e) => {
       this.sets.cursorPosX = e.target.selectionStart;
-      console.log(this.sets.cursorPosX, this.sets.areaLength)
+      console.log(this.sets.cursorPosX, this.sets.cursorPosY, this.sets.areaLength[this.sets.cursorPosY])
     });
   }
 
@@ -61,34 +64,37 @@ export class Keyboard {
     return node;
   }
   /*
-    createGroups() {
-      for ( let i = 0; i < this.groups.length; i++) {
-        this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
+  createGroups() {
+    for ( let i = 0; i < this.groups.length; i++) {
+      this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
+    }
+  }
+
+  createKeys() {
+    for (let i = 0; i < this.groups.length; i++) {
+      for ( let j = 0; j < this.lang[i].length; j++) {
+        const key = this.createDOMNode('', 'button', 'keyboard__key');
+        this.keys.push(key);
+        this.groups[i].append(key);
       }
     }
+  }
   
-    createKeys() {
-      for (let i = 0; i < this.groups.length; i++) {
-        for ( let j = 0; j < this.lang[i].length; j++) {
-          const key = this.createDOMNode('', 'button', 'keyboard__key');
-          this.keys.push(key);
-          this.groups[i].append(key);
-        }
-      }
-    }
+  fillKeysBySymbols() {
+
+  }
   */
   createKeys() {  // creates 64 keys here
     const fragment = document.createDocumentFragment();
     // TODO: think about two symbols on some keys
     for (let i = 0; i < this.groups.length; i++) {
       this.keyBoard.append(this.groups[i] = this.createDOMNode(this.groups[i], 'div', 'keyboard__group'));
+
       this.lang[i].forEach(el => {
         const key = this.createDOMNode('', 'button', 'keyboard__key');
-        const symbolKey = el[0]; // ?
+        key.innerHTML = this.createSymbol(el);
 
-        key.innerHTML = this.createSymbol(symbolKey);
-
-        this.getKeys(key, symbolKey);
+        this.getKeys(key, el[0]);
         this.keys.push(key);
         this.groups[i].append(key)
       });
@@ -99,11 +105,16 @@ export class Keyboard {
   }
 
   createSymbol(symbol) {
-    return `<span class='symbol'>${symbol}</span>`;
+    if (symbol[0] === symbol[1]) {
+      return `<span class='symbol'>${symbol[0]}</span>`;
+    } else return `
+      <span class='symbol top_left'>${symbol[1]}</span>
+      <br />
+      <span class='symbol bottom_right'>${symbol[0]}</span>
+      `;
   }
 
   getKeys(key, symbol) {
-    
     switch (symbol) {
       case 'backspace':
         key.classList.add('backspace');
@@ -123,7 +134,7 @@ export class Keyboard {
           }
 
           this.sets.cursorPosX = (this.sets.cursorPosX > 0) ? this.sets.cursorPosX - 1 : 0;
-          this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
+          this.sets.areaLength[this.sets.cursorPosY] = (this.sets.areaLength[this.sets.cursorPosY] > 0) ? this.sets.areaLength[this.sets.cursorPosY] - 1 : 0;
 
           this.triggerEvent("oninput");
         });
@@ -138,17 +149,17 @@ export class Keyboard {
 
         key.addEventListener("click", () => {
           if (this.sets.cursorPosX === 0) {  // beginning position
-            this.textArea.value = (this.sets.areaLength === 0) ?
+            this.textArea.value = (this.sets.areaLength[this.sets.cursorPosY] === 0) ?
               '    ' :
               '    ' + this.textArea.value.slice(0, this.sets.areaLength);
-          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
+          } else if (this.sets.cursorPosX === this.sets.areaLength[this.sets.cursorPosY]) {  // ending position
             this.textArea.value += '    ';
           } else {  // intermediate position
             this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX) + '    ' + this.textArea.value.slice(this.sets.cursorPosX);
           }
 
           this.sets.cursorPosX += 4;
-          this.sets.areaLength += 4;
+          this.sets.areaLength[this.sets.cursorPosY] += 4;
 
           this.triggerEvent("oninput");
         });
@@ -158,17 +169,17 @@ export class Keyboard {
 
         key.addEventListener("click", () => {
           if (this.sets.cursorPosX === 0) {  // beginning position
-            this.textArea.value = (this.sets.areaLength === 0) ?
+            this.textArea.value = (this.sets.areaLength[this.sets.cursorPosY] === 0) ?
               '' :
               this.textArea.value.slice(1);
-          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
+          } else if (this.sets.cursorPosX === this.sets.areaLength[this.sets.cursorPosY]) {  // ending position
             return;
           } else {  // intermediate position
             this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX) + this.textArea.value.slice(this.sets.cursorPosX + 1);
           }
 
           this.sets.cursorPosX = (this.sets.cursorPosX > 0) ? this.sets.cursorPosX : 0;
-          this.sets.areaLength = (this.sets.areaLength > 0) ? this.sets.areaLength - 1 : 0;
+          this.sets.areaLength[this.sets.cursorPosY] = (this.sets.areaLength[this.sets.cursorPosY] > 0) ? this.sets.areaLength[this.sets.cursorPosY] - 1 : 0;
 
           this.triggerEvent("oninput");
         });
@@ -191,6 +202,9 @@ export class Keyboard {
 
         key.addEventListener("click", () => {
           this.textArea.value += "\n";
+          this.sets.cursorPosX = 0;
+          this.sets.cursorPosY++;
+          this.sets.areaLength.push(0);
           this.triggerEvent("oninput");
         });
         break;
@@ -294,7 +308,6 @@ export class Keyboard {
         break;
       default:
         key.addEventListener("click", () => {
-
           symbol = this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
 
           if (this.properties.shiftKey) {
@@ -303,17 +316,17 @@ export class Keyboard {
           }
 
           if (this.sets.cursorPosX === 0) {  // beginning position
-            this.textArea.value = (this.sets.areaLength === 0) ?
+            this.textArea.value = (this.sets.areaLength[this.sets.cursorPosY] === 0) ?
               this.textArea.value + symbol :
-              symbol + this.textArea.value.slice(0, this.sets.areaLength);
-          } else if (this.sets.cursorPosX === this.sets.areaLength) {  // ending position
+              symbol + this.textArea.value.slice(0, this.sets.areaLength[this.sets.cursorPosY]);
+          } else if (this.sets.cursorPosX === this.sets.areaLength[this.sets.cursorPosY]) {  // ending position
             this.textArea.value += symbol;
           } else {  // intermediate position
             this.textArea.value = this.textArea.value.slice(0, this.sets.cursorPosX) + symbol + this.textArea.value.slice(this.sets.cursorPosX);
           }
 
           this.sets.cursorPosX++;
-          this.sets.areaLength++;
+          this.sets.areaLength[this.sets.cursorPosY]++;
 
           this.triggerEvent("oninput");
         });
