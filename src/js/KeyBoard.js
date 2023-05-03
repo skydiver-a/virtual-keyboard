@@ -9,7 +9,7 @@ export class Keyboard {
     this.keyBoardKeys = '';
     this.groups = [...Array(5)].map(() => '');
     this.keys = [];
-    this.switchLang = false;
+    this.switchLang = true;
     this.lang = this.switchLang ? en : ru;
     this.sets = {
       cursorPosX: 0,
@@ -94,7 +94,7 @@ export class Keyboard {
         const key = this.createDOMNode('', 'button', 'keyboard__key');
         key.innerHTML = this.createSymbol(el);
 
-        this.getKeys(key, el[0]);
+        this.getKeys(key, el[0], el[1]);
         this.keys.push(key);
         this.groups[i].append(key)
       });
@@ -114,7 +114,7 @@ export class Keyboard {
       `;
   }
 
-  getKeys(key, symbol) {
+  getKeys(key, symbol, altSymbol) {
     switch (symbol) {
       case 'backspace':
         key.classList.add('backspace');
@@ -311,7 +311,7 @@ export class Keyboard {
           symbol = this.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
 
           if (this.properties.shiftKey) {
-            symbol = symbol.toUpperCase();
+            symbol = altSymbol;
             this.toggleShiftKey();
           }
 

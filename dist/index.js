@@ -39,7 +39,7 @@ var Keyboard = /*#__PURE__*/function () {
       return '';
     });
     this.keys = [];
-    this.switchLang = false;
+    this.switchLang = true;
     this.lang = this.switchLang ? _en__WEBPACK_IMPORTED_MODULE_0__.en : _ru__WEBPACK_IMPORTED_MODULE_1__.ru;
     this.sets = {
       cursorPosX: 0,
@@ -130,7 +130,7 @@ var Keyboard = /*#__PURE__*/function () {
         _this2.lang[i].forEach(function (el) {
           var key = _this2.createDOMNode('', 'button', 'keyboard__key');
           key.innerHTML = _this2.createSymbol(el);
-          _this2.getKeys(key, el[0]);
+          _this2.getKeys(key, el[0], el[1]);
           _this2.keys.push(key);
           _this2.groups[i].append(key);
         });
@@ -150,7 +150,7 @@ var Keyboard = /*#__PURE__*/function () {
     }
   }, {
     key: "getKeys",
-    value: function getKeys(key, symbol) {
+    value: function getKeys(key, symbol, altSymbol) {
       var _this3 = this;
       switch (symbol) {
         case 'backspace':
@@ -299,7 +299,7 @@ var Keyboard = /*#__PURE__*/function () {
           key.addEventListener("click", function () {
             symbol = _this3.properties.capsLock ? symbol.toUpperCase() : symbol.toLowerCase();
             if (_this3.properties.shiftKey) {
-              symbol = symbol.toUpperCase();
+              symbol = altSymbol;
               _this3.toggleShiftKey();
             }
             if (_this3.sets.cursorPosX === 0) {
@@ -409,7 +409,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ru": () => (/* binding */ ru)
 /* harmony export */ });
-var ru = [[['ё', '~'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', ';'], ['5', '%'], ['6', ':'], ['7', '?'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['+', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['й', 'Й'], ['ц', 'Ц'], ['у', 'У'], ['к', 'К'], ['е', 'Е'], ['н', 'Н'], ['г', 'Г'], ['ш', 'Ш'], ['щ', 'Щ'], ['з', 'З'], ['х', 'Х'], ['ъ', 'Ъ'], ['\\', '|'], ['del', 'del']], [['capslock', 'capslock'], ['ф', 'Ф'], ['ы', 'Ы'], ['в', 'В'], ['а', 'А'], ['п', 'П'], ['р', 'Р'], ['о', 'О'], ['л', 'Л'], ['д', 'Д'], ['ж', 'Ж'], ['э', 'Э'], ['enter', 'enter']], [['shift_left', 'shift_left'], ['я', 'Я'], ['ч', 'Ч'], ['с', 'С'], ['м', 'М'], ['и', 'И'], ['т', 'Т'], ['ь', 'Ь'], ['б', 'Б'], ['ю', 'Ю'], [',', '.'], ['shift_right', 'shift_right']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['alt', 'alt'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
+var ru = [[['ё', '~'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', ';'], ['5', '%'], ['6', ':'], ['7', '?'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['+', '+'], ['backspace', 'backspace']], [['tab', 'tab'], ['й', 'Й'], ['ц', 'Ц'], ['у', 'У'], ['к', 'К'], ['е', 'Е'], ['н', 'Н'], ['г', 'Г'], ['ш', 'Ш'], ['щ', 'Щ'], ['з', 'З'], ['х', 'Х'], ['ъ', 'Ъ'], ['\\', '|'], ['del', 'del']], [['capslock', 'capslock'], ['ф', 'Ф'], ['ы', 'Ы'], ['в', 'В'], ['а', 'А'], ['п', 'П'], ['р', 'Р'], ['о', 'О'], ['л', 'Л'], ['д', 'Д'], ['ж', 'Ж'], ['э', 'Э'], ['enter', 'enter']], [['shift_left', 'shift_left'], ['я', 'Я'], ['ч', 'Ч'], ['с', 'С'], ['м', 'М'], ['и', 'И'], ['т', 'Т'], ['ь', 'Ь'], ['б', 'Б'], ['ю', 'Ю'], ['.', ','], ['shift_right', 'shift_right']], [['ctrl', 'ctrl'], ['win', 'win'], ['alt', 'alt'], ['space', 'space'], ['alt', 'alt'], ['ctrl', 'ctrl'], ['left', 'left'], ['up', 'up'], ['down', 'down'], ['right', 'right']]];
 
 /***/ })
 
